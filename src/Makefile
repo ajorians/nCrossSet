@@ -8,7 +8,7 @@ OBJCOPY := "$(shell which arm-elf-objcopy 2>/dev/null)"
 ifeq (${OBJCOPY},"")
 	OBJCOPY := arm-none-eabi-objcopy
 endif
-EXE = nCrossSet-gc
+EXE = nCrossSet-sdl
 DISTDIR = ..
 
 OBJS = $(patsubst %.c,%.o,$(wildcard *.c))

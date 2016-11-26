@@ -1,13 +1,16 @@
 #include <os.h>
 #include <libndls.h>
-#include <ngc.h>
+#include <SDL/SDL.h>
 #include "Startup.h"
-/*#include "MainMenu.h"
+#include "MainMenu.h"
 #include "Game.h"
-#include "Options.h"
-#include "Help.h"
+//#include "Options.h"
+//#include "Help.h"
 #include "Config.h"
-#include "Levels.h"*/
+#include "Levels.h"
+
+#define SCREEN_BIT_DEPTH        (16)
+#define SCREEN_VIDEO_MODE (SDL_SWSURFACE|SDL_FULLSCREEN|SDL_HWPALETTE)
 
 int main(int argc, char *argv[])
 {
@@ -18,16 +21,44 @@ int main(int argc, char *argv[])
       }
    }
 
-/*   int nLevelNumber = -1;
+   printf("Initializing SDL.\n");
+
+   /* Initialize the SDL library (starts the event loop) */
+   if ( SDL_Init(SDL_INIT_VIDEO ) < 0 )
+   {
+      fprintf(stderr,
+              "Couldn't initialize SDL: %s\n", SDL_GetError());
+      exit(1);
+   }
+
+   printf("SDL initialized.\n");
+
+   SDL_Surface* pScreen = NULL;
+   pScreen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BIT_DEPTH, SCREEN_VIDEO_MODE);
+
+   //HSSetCurrentDirectory(argv[0]);
+
+   if( pScreen == NULL )
+   {
+      fprintf(stderr, "Couldn't set %dx%dx%d video mode: %s\n", SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BIT_DEPTH, SDL_GetError());
+      exit(1);
+   }
+   else
+   {
+      /* Hides the cursor */
+      SDL_ShowCursor(SDL_DISABLE);
+   }
+
+   int nLevelNumber = -1;
    char strLevelData[2048];
    struct Config* pConfig = NULL;
    CreateConfig(&pConfig);
    while(1) {
       int bShowHelp = 0, bShowOptions = 0;
-      if( argc != 2 ) {
+      /*if( argc != 2 )*/ {
          struct MainMenu* pMenu = NULL;
          int bShouldQuit = 0;
-         CreateMainMenu(&pMenu, nLevelNumber, pConfig);
+         CreateMainMenu(&pMenu, nLevelNumber, pConfig, pScreen);
          while(MainMenuLoop(pMenu)){}
          bShouldQuit = MainMenuShouldQuit(pMenu);
          bShowOptions = MainMenuShowOptions(pMenu);
@@ -41,7 +72,7 @@ int main(int argc, char *argv[])
          if( bShouldQuit )
             break;
       }
-      else {
+      /*else {
          FILE *fp = fopen(argv[1], "r");
          if (!fp) { return 0; }
          struct stat filestat;
@@ -52,26 +83,26 @@ int main(int argc, char *argv[])
          strLevelData[filestat.st_size] = 0;
 
          fclose(fp);
-      }
+      }*/
 
       if( bShowOptions ) {
-         struct Options* pOptions = NULL;
+         /*struct Options* pOptions = NULL;
          CreateOptions(&pOptions, pConfig);
          while(OptionsLoop(pOptions)){}
-         FreeOptions(&pOptions);
+         FreeOptions(&pOptions);*/
          continue;
       }
       else if( bShowHelp ) {
-         struct Help* pHelp = NULL;
+/*         struct Help* pHelp = NULL;
          CreateHelp(&pHelp, pConfig);
          while(HelpLoop(pHelp)){}
-         FreeHelp(&pHelp);
+         FreeHelp(&pHelp);*/
          continue;
       }
       else {
          struct Game* pGame = NULL;
          int bShouldQuit = 0;
-         CreateGame(&pGame, strLevelData, nLevelNumber, pConfig);
+         CreateGame(&pGame, strLevelData, nLevelNumber, pConfig, pScreen);
          while(GameLoop(pGame)){}
          bShouldQuit = GameShouldQuit(pGame);
          FreeGame(&pGame);
@@ -84,6 +115,13 @@ int main(int argc, char *argv[])
    }
 
    FreeConfig(&pConfig);
-*/
+
+   printf("Quitting SDL.\n");
+
+   /* Shutdown all subsystems */
+   SDL_Quit();
+
+   printf("Quitting...\n");
+
    return 0;
 }
