@@ -1,7 +1,6 @@
 #include <os.h>
 #include <libndls.h>
 #include "Game.h"
-//#include "Piece.h"
 //#include "Indicators.h"
 
 void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, struct Config* pConfig, struct SDL_Surface* pScreen)
@@ -46,8 +45,6 @@ void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, 
 void FreeGame(struct Game** ppGame)
 {
    struct Game* pGame = *ppGame;
-   //FreeMetrics(&pGame->m_pMetrics);
-   //pGame->m_pMetrics = NULL;
 
    int nWidth = GetCrossWidth(pGame->m_Cross);
    int nHeight = GetCrossHeight(pGame->m_Cross);
@@ -147,7 +144,12 @@ int GamePollEvents(struct Game* pGame)
                case SDLK_RCTRL:
                   ToggleCrossCellValue(pGame->m_Cross, GetCurrentX(pGame->m_pSelector), GetCurrentY(pGame->m_pSelector));
                   break;
-  
+
+               case SDLK_LSHIFT:
+               case SDLK_RSHIFT:
+                  ToggleCrossCellMarking(pGame->m_Cross, GetCurrentX(pGame->m_pSelector), GetCurrentY(pGame->m_pSelector));
+                  break;
+
                default:
                   break;
             }
@@ -166,66 +168,6 @@ int GameLoop(struct Game* pGame)
    DrawBoard(pGame);
 
    SDL_Delay(30);
-
-   /*int nSelectionX = pGame->m_pSelector->m_nSelectionX;
-   int nSelectionY = pGame->m_pSelector->m_nSelectionY;
-   int nDestroyed = 0, nMarked = 0;
-   if( IsKeyPressed(KEY_NSPIRE_ESC) ) {
-      pGame->m_bShouldQuit = 0;//Could change to completly close program
-      return 0;
-   }
-   else if( ( IsKeyPressed(KEY_NSPIRE_LEFT) || IsKeyPressed(KEY_NSPIRE_4) ) && pGame->m_bWon != SQUARELIB_GAMEOVER ) {
-      wait_no_key_pressed();
-      SelectorMove(pGame->m_pSelector, Sel_Left);
-   }
-   else if( ( IsKeyPressed(KEY_NSPIRE_RIGHT) || IsKeyPressed(KEY_NSPIRE_6) ) && pGame->m_bWon != SQUARELIB_GAMEOVER ) {
-      wait_no_key_pressed();
-      SelectorMove(pGame->m_pSelector, Sel_Right);
-   }
-   else if( ( IsKeyPressed(KEY_NSPIRE_UP) || IsKeyPressed(KEY_NSPIRE_8) ) && pGame->m_bWon != SQUARELIB_GAMEOVER ) {
-      wait_no_key_pressed();
-      SelectorMove(pGame->m_pSelector, Sel_Up);
-   }
-   else if( ( IsKeyPressed(KEY_NSPIRE_DOWN) || IsKeyPressed(KEY_NSPIRE_2) ) && pGame->m_bWon != SQUARELIB_GAMEOVER ) {
-      wait_no_key_pressed();
-      SelectorMove(pGame->m_pSelector, Sel_Down);
-   }
-   else if( IsKeyPressed(KEY_NSPIRE_CTRL) && pGame->m_bWon != SQUARELIB_GAMEOVER ) {
-      wait_no_key_pressed();
-
-      IsSquareMarked(pGame->m_Square, nSelectionX, nSelectionY, &nMarked);
-      if( nMarked == SQUARELIB_NOT_MARKED ) {
-
-         IsSquareDestroyed(pGame->m_Square, nSelectionX, nSelectionY, &nDestroyed);
-         if( nDestroyed == SQUARELIB_NOT_DESTROYED ) {
-            DestroySquare(pGame->m_Square, nSelectionX, nSelectionY);
-
-            pGame->m_bWon = IsSquareGameOver(pGame->m_Square);
-            if( pGame->m_bWon )
-               UpdateGameWon( pGame );
-         }
-
-         //Check if destroyed because if not you made a mistake
-         IsSquareDestroyed(pGame->m_Square, nSelectionX, nSelectionY, &nDestroyed);
-         if( nDestroyed == SQUARELIB_NOT_DESTROYED ) {
-            int nWidth = GetSquareWidth(pGame->m_Square);
-            struct Piece* pPiece = &pGame->m_apPieces[nSelectionX+nSelectionY*nWidth];
-            PieceMistaken(pPiece);
-         }
-
-      }
-   }
-   else if( ( IsKeyPressed(KEY_NSPIRE_SHIFT) || IsKeyPressed(KEY_NSPIRE_ENTER) ) && pGame->m_bWon != SQUARELIB_GAMEOVER ) {
-      wait_no_key_pressed();
-      IsSquareDestroyed(pGame->m_Square, nSelectionX, nSelectionY, &nDestroyed);
-      if( nDestroyed == SQUARELIB_NOT_DESTROYED ) {
-         ToggleSquareMark(pGame->m_Square, nSelectionX, nSelectionY);
-         pGame->m_bWon = IsSquareGameOver(pGame->m_Square);
-         if( pGame->m_bWon ) {
-            UpdateGameWon( pGame );
-         }
-      }
-   }*/
 
    return 1;
 }

@@ -117,9 +117,9 @@ int CrossLibCreate(CrossLib* api, const char* pstrFile)
          nSpotInBuffer = 0;
          int nValue = atoi(buffer);
 
-//#ifdef DEBUG_DETAILS
+#ifdef DEBUG_DETAILS
          printf("Value %d\n", nValue);
-//#endif
+#endif
 
          if( nWidth < 0 ) {
 #ifdef CROSSLIB_RUN_SAFE
@@ -284,7 +284,7 @@ int GetCrossCellValueCount(CrossLib api, int nX, int nY)
    pC = (struct CrossSet*)api;
    pCell = GetAt(pC->m_pBoard, nX, nY);
    for(n=0; n<MAX_CELL_VALUES; n++) {
-      printf("For X: %d; Y: %d; value is: %d\n", nX, nY, pCell->m_aValues[n]);
+      //printf("For X: %d; Y: %d; value is: %d\n", nX, nY, pCell->m_aValues[n]);
       if( pCell->m_aValues[n] < 0 )
          break;
    }

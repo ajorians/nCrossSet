@@ -9,9 +9,6 @@
 #include "Metrics.h"
 #include "Piece.h"
 #include "Selector.h"
-//struct Metrics;
-//struct Piece;
-//struct Selector;
 //struct Indicators;
 
 struct Game

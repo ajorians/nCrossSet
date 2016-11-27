@@ -12,6 +12,9 @@ struct Piece
    int m_nY;
    CrossLib m_Cross;//Does not own
    struct Metrics* m_pMetrics;//Does not own
+#ifdef DIFFERENT_FONT_FOR_MAIN_PIECE
+   nSDL_Font    *m_pFontBig;
+#endif
    nSDL_Font    *m_pFont;
 };
 
