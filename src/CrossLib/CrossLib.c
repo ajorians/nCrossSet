@@ -314,6 +314,49 @@ int GetCrossCellMarked(CrossLib api, int nX, int nY)
    return pCell->m_nMarked;
 }
 
+int IsCrossGameOver(CrossLib api)
+{
+   struct CrossSet* pC;
+   int i,j,k;
+   DEBUG_FUNC_NAME;
+
+   pC = (struct CrossSet*)api;
+   for(i=0; i<GetCrossWidth(api); i++) {
+      for(j=0; j<GetCrossHeight(api); j++) {
+         for(k=0; k<GetCrossHeight(api); k++) {
+            if( j == k )
+               continue;
+
+#ifdef DEBUG_DETAILS
+	    printf("Comparing (%d,%d):%d to (%d,%d):%d\n", i,j,GetCrossCellValue(api, i, j, 0),  i,k,GetCrossCellValue(api, i, k, 0));
+#endif
+	    if( GetCrossCellValue(api, i, j, 0) == GetCrossCellValue(api, i, k, 0) ) {
+               return CROSSLIB_NOT_GAMEOVER;
+            }
+         }
+      }
+   }
+
+   for(i=0; i<GetCrossHeight(api); i++) {
+      for(j=0; j<GetCrossWidth(api); j++) {
+         for(k=0; k<GetCrossWidth(api); k++) {
+            if( j == k )
+               continue;
+
+#ifdef DEBUG_DETAILS
+	    printf("Comparing (%d,%d):%d to (%d,%d):%d\n", j,i,GetCrossCellValue(api, j, i, 0), k,i,GetCrossCellValue(api, k, i, 0));
+#endif
+	    if( GetCrossCellValue(api, j, i, 0) == GetCrossCellValue(api, k, i, 0) ) {
+               return CROSSLIB_NOT_GAMEOVER;
+            }
+         }
+      }
+   }
+
+   //printf("Game over\n");
+   return CROSSLIB_GAMEOVER;
+}
+
 int ToggleCrossCellMarking(CrossLib api, int nX, int nY)
 {
    struct CrossSet* pC;

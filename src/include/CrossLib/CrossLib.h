@@ -11,6 +11,9 @@ typedef void* CrossLib;
 #define CROSSLIB_MARKED			(1)
 #define CROSSLIB_NOT_MARKED		(0)
 
+#define CROSSLIB_GAMEOVER		(1)
+#define CROSSLIB_NOT_GAMEOVER		(0)
+
 //////////////////////////////////////////////
 //Initalization/Error checking/Mode functions
 //////////////////////////////////////////////
@@ -28,6 +31,7 @@ int GetCrossHeight(CrossLib api);
 int GetCrossCellValueCount(CrossLib api, int nX, int nY);
 int GetCrossCellValue(CrossLib api, int nX, int nY, int nIndex);
 int GetCrossCellMarked(CrossLib api, int nX, int nY);
+int IsCrossGameOver(CrossLib api);
 
 int ToggleCrossCellMarking(CrossLib api, int nX, int nY);
 int ToggleCrossCellValue(CrossLib api, int nX, int nY);

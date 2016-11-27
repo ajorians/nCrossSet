@@ -10,7 +10,7 @@ void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, 
    CrossLibCreate(&(pGame->m_Cross), pstrLevelData);
    pGame->m_nLevelNum = nLevelNum;
    pGame->m_pConfig = pConfig;
-   //pGame->m_bWon = IsSquareGameOver(pGame->m_Square);
+   pGame->m_bWon = IsCrossGameOver(pGame->m_Cross);
 
    pGame->m_pScreen = pScreen;
    CreateBackground(&(pGame->m_pBackground), pGame->m_pScreen, pGame->m_pConfig);
@@ -143,6 +143,8 @@ int GamePollEvents(struct Game* pGame)
                case SDLK_LCTRL:
                case SDLK_RCTRL:
                   ToggleCrossCellValue(pGame->m_Cross, GetCurrentX(pGame->m_pSelector), GetCurrentY(pGame->m_pSelector));
+
+		  pGame->m_bWon = IsCrossGameOver(pGame->m_Cross);
                   break;
 
                case SDLK_LSHIFT:
@@ -169,7 +171,7 @@ int GameLoop(struct Game* pGame)
 
    SDL_Delay(30);
 
-   return 1;
+   return pGame->m_bWon != CROSSLIB_GAMEOVER;
 }
 
 int GameShouldQuit(struct Game* pGame)

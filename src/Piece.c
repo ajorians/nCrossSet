@@ -4,7 +4,6 @@
 
 void CreatePiece(struct Piece* pPiece, int x, int y, CrossLib cross, struct Metrics* pMetrics)
 {
-   printf("CreatePiece\n");
    pPiece->m_nX = x;
    pPiece->m_nY = y;
    pPiece->m_Cross = cross;
@@ -18,7 +17,6 @@ void CreatePiece(struct Piece* pPiece, int x, int y, CrossLib cross, struct Metr
 
 void FreePiece(struct Piece* pPiece)
 {
-   printf("FreePiece\n");
    pPiece->m_Cross = NULL;//Does not own
    pPiece->m_pMetrics = NULL;//Does not own
 
