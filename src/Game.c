@@ -29,7 +29,7 @@ void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, 
    }
 
    pGame->m_pSelector = NULL;
-   CreateSelector(&pGame->m_pSelector, pGame->m_pScreen, pGame->m_pConfig, pGame->m_pMetrics);
+   CreateSelector(&pGame->m_pSelector, pGame->m_pScreen, pGame->m_pConfig, pGame->m_pMetrics, pGame->m_Cross);
 
    /*pGame->m_pIndicators = NULL;
    CreateIndicators(&pGame->m_pIndicators, pGame->m_Square, pGame->m_pMetrics);

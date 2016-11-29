@@ -9,12 +9,13 @@ struct Selector
 {
    int m_nCurrentX;
    int m_nCurrentY;
+   CrossLib m_Cross;//Does not own
    struct SDL_Surface* m_pScreen;//Does not own
    struct Config* m_pConfig;//Does not own
    struct Metrics* m_pMetrics;//Does not own
 };
 
-void CreateSelector(struct Selector** ppSelector, struct SDL_Surface* pScreen, struct Config* pConfig, struct Metrics* pMetrics);
+void CreateSelector(struct Selector** ppSelector, struct SDL_Surface* pScreen, struct Config* pConfig, struct Metrics* pMetrics, CrossLib cross);
 void FreeSelector(struct Selector** ppSelector);
 void DrawSelector(struct Selector* pSelector);
 

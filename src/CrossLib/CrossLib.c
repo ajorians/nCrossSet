@@ -181,13 +181,13 @@ int CrossLibCreate(CrossLib* api, const char* pstrFile)
                         nSpotInBuffer = 0;
                         nValue = atoi(buffer);
 
-                        printf("Value for cell: %d\n", nValue);
+                        //printf("Value for cell: %d\n", nValue);
 
                         if( nMarked < 0 ) {
                            nMarked = nValue;
 
                            pCell->m_nMarked = nValue;
-                           printf("Used as marking value\n");
+                           //printf("Used as marking value\n");
                         }
                         else {
                            int n;
@@ -198,11 +198,11 @@ int CrossLibCreate(CrossLib* api, const char* pstrFile)
                            for(n=0; n<MAX_CELL_VALUES; n++) {
                               if( pCell->m_aValues[n] == -1 ) {
                                  pCell->m_aValues[n] = nValue;
-                                 printf("Put %d in position %d for %d,%d\n", nValue, n, x, y);
+                                 //printf("Put %d in position %d for %d,%d\n", nValue, n, x, y);
                                  break;
                               }
                               else {
-                                 printf("Position %d is currently: %d\n", n, pCell->m_aValues[n]);
+                                 //printf("Position %d is currently: %d\n", n, pCell->m_aValues[n]);
                               }
                            }
                         }

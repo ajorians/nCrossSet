@@ -3,11 +3,12 @@
 
 #define SELECTOR_LINE_WIDTH     (4)
 
-void CreateSelector(struct Selector** ppSelector, struct SDL_Surface* pScreen, struct Config* pConfig, struct Metrics* pMetrics)
+void CreateSelector(struct Selector** ppSelector, struct SDL_Surface* pScreen, struct Config* pConfig, struct Metrics* pMetrics, CrossLib cross)
 {
    *ppSelector = malloc(sizeof(struct Selector));
    struct Selector* pSelector = *ppSelector;
    pSelector->m_nCurrentX = pSelector->m_nCurrentY = 0;
+   pSelector->m_Cross = cross;
    pSelector->m_pScreen = pScreen;
    pSelector->m_pConfig = pConfig;
    pSelector->m_pMetrics = pMetrics;
@@ -16,6 +17,7 @@ void CreateSelector(struct Selector** ppSelector, struct SDL_Surface* pScreen, s
 void FreeSelector(struct Selector** ppSelector)
 {
    struct Selector* pSelector = *ppSelector;
+   pSelector->m_Cross = NULL;//Does not own
    pSelector->m_pScreen = NULL;//Does not own
    pSelector->m_pConfig = NULL;//Does not own
    pSelector->m_pMetrics = NULL;//Does not own
@@ -50,13 +52,13 @@ void Move(struct Selector* pSelector, enum Direction eDirection)
          if( pSelector->m_nCurrentY > 0 ) pSelector->m_nCurrentY--;
          break;
       case Down:
-         pSelector->m_nCurrentY++;
+         if( pSelector->m_nCurrentY < (GetCrossHeight(pSelector->m_Cross)-1) ) pSelector->m_nCurrentY++;
          break;
       case Left:
          if( pSelector->m_nCurrentX > 0 ) pSelector->m_nCurrentX--;
          break;
       case Right:
-	 pSelector->m_nCurrentX++;
+	 if( pSelector->m_nCurrentX < (GetCrossWidth(pSelector->m_Cross)-1) ) pSelector->m_nCurrentX++;
          break;
    }
 }

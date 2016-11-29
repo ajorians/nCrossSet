@@ -1,7 +1,10 @@
 #include "Metrics.h"
 
-#define PIECE_GAP_HORIZONTAL	(4)
-#define PIECE_GAP_VERTICAL	(4)
+#define PIECE_GAP_HORIZONTAL	(2)
+#define PIECE_GAP_VERTICAL	(2)
+
+#define MARGIN_LEFT		(2)
+#define MARGIN_TOP		(2)
 
 void CreateMetrics(struct Metrics** ppMetrics, CrossLib cross)
 {
@@ -12,13 +15,13 @@ void CreateMetrics(struct Metrics** ppMetrics, CrossLib cross)
    int nWidth = GetCrossWidth(cross);
    int nHeight = GetCrossHeight(cross);
 
-   int nMaxPieceWidth = (SCREEN_WIDTH - 10) / nWidth;
-   int nMaxPieceHeight = (SCREEN_HEIGHT - 10) / nHeight;
+   int nMaxPieceWidth = (SCREEN_WIDTH - (MARGIN_LEFT*2)) / nWidth;
+   int nMaxPieceHeight = (SCREEN_HEIGHT - (MARGIN_TOP*2)) / nHeight;
 
    pMetrics->m_nPieceWidth = nMaxPieceWidth;
    pMetrics->m_nPieceHeight = nMaxPieceHeight;
-   pMetrics->m_nLeft = 5;
-   pMetrics->m_nTop = 5;
+   pMetrics->m_nLeft = MARGIN_LEFT;
+   pMetrics->m_nTop = MARGIN_TOP;
 }
 
 void FreeMetrics(struct Metrics** ppMetrics)
@@ -51,7 +54,7 @@ int GetPieceHeight(struct Metrics* pMetrics, int x, int y)
 
 int GetPieceTextLeft(struct Metrics* pMetrics,int x, int y)
 {
-   return GetPieceLeft(pMetrics, x, y) + 7;
+   return GetPieceLeft(pMetrics, x, y) + 4;
 }
 
 int GetPieceTextTop(struct Metrics* pMetrics,int x, int y)

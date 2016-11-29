@@ -2,6 +2,13 @@
 
 #define PIECE_BORDER_SIZE	(4)
 
+#define USE_DIFFERENT_FONT
+
+#ifdef USE_DIFFERENT_FONT
+static nSDL_Font* g_pFontBig = NULL;
+#endif
+static nSDL_Font* g_pFont = NULL;
+
 void CreatePiece(struct Piece* pPiece, int x, int y, CrossLib cross, struct Metrics* pMetrics)
 {
    pPiece->m_nX = x;
@@ -9,10 +16,12 @@ void CreatePiece(struct Piece* pPiece, int x, int y, CrossLib cross, struct Metr
    pPiece->m_Cross = cross;
    pPiece->m_pMetrics = pMetrics;
 
-#ifdef DIFFERENT_FONT_FOR_MAIN_PIECE
-   pPiece->m_pFontBig = nSDL_LoadFont(NSDL_FONT_FANTASY, 255/*R*/, 255/*G*/, 255/*B*/);
+   if( g_pFont == NULL ) {
+#ifdef USE_DIFFERENT_FONT
+      g_pFontBig = nSDL_LoadFont(NSDL_FONT_THIN, 255/*R*/, 255/*G*/, 255/*B*/);
 #endif
-   pPiece->m_pFont = nSDL_LoadFont(NSDL_FONT_THIN, 255/*R*/, 255/*G*/, 255/*B*/);
+      g_pFont = nSDL_LoadFont(NSDL_FONT_THIN, 127/*R*/, 127/*G*/, 127/*B*/);
+   }
 }
 
 void FreePiece(struct Piece* pPiece)
@@ -20,18 +29,19 @@ void FreePiece(struct Piece* pPiece)
    pPiece->m_Cross = NULL;//Does not own
    pPiece->m_pMetrics = NULL;//Does not own
 
-#ifdef DIFFERENT_FONT_FOR_MAIN_PIECE
-   nSDL_FreeFont(pPiece->m_pFontBig);
-   pPiece->m_pFontBig = NULL;
+   if( g_pFont != NULL ) {
+#ifdef USE_DIFFERENT_FONT
+      nSDL_FreeFont(g_pFontBig);
+      g_pFontBig = NULL;
 #endif
 
-   nSDL_FreeFont(pPiece->m_pFont);
-   pPiece->m_pFont = NULL;
+      nSDL_FreeFont(g_pFont);
+      g_pFont = NULL;
+   }
 }
 
 void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen)
 {
-   //printf("PieceDraw\n");
    SDL_Rect rect;
    rect.w = GetPieceWidth(pPiece->m_pMetrics, pPiece->m_nX, pPiece->m_nY);
    rect.h = GetPieceHeight(pPiece->m_pMetrics, pPiece->m_nX, pPiece->m_nY);
@@ -54,35 +64,35 @@ void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen)
 
    SDL_FillRect(pScreen, &rect, SDL_MapRGB(pScreen->format, r, g, b));
 
-   static char buffer[10];
-
-   buffer[0] = GetCrossCellValue(pPiece->m_Cross, pPiece->m_nX, pPiece->m_nY, 0) + '0';
+   static char buffer[2];
    buffer[1] = '\0';
 
    int top = GetPieceTextTop(pPiece->m_pMetrics, pPiece->m_nX, pPiece->m_nY);
    int left = GetPieceTextLeft(pPiece->m_pMetrics, pPiece->m_nX, pPiece->m_nY);
-   nSDL_DrawString(pScreen,
-#ifdef DIFFERENT_FONT_FOR_MAIN_PIECE 
-		   pPiece->m_pFontBig
-#else
-		   pPiece->m_pFont
-#endif
-		   , left + rect.w/2 - 8, top + rect.h/2 - 8, buffer);
 
    int nNumbers = GetCrossCellValueCount(pPiece->m_Cross, pPiece->m_nX, pPiece->m_nY);
-   if( nNumbers >= 2 ) {
-      int i=1;
-      for(; i<nNumbers; i++) {
-         buffer[i-1] = GetCrossCellValue(pPiece->m_Cross, pPiece->m_nX, pPiece->m_nY, i) + '0';
+
+   int i=0;
+   for(; i<nNumbers; i++) {
+      buffer[0] = GetCrossCellValue(pPiece->m_Cross, pPiece->m_nX, pPiece->m_nY, i) + '0';
+
+      nSDL_Font* pFont = g_pFont;
+#ifdef USE_DIFFERENT_FONT
+      if( i == 0 ) {
+         pFont = g_pFontBig;
       }
-      buffer[i-1] = '\0';
-      nSDL_DrawString(pScreen, pPiece->m_pFont, left, top, buffer);
-   }
-#if 0
-   buffer[0] = nNumbers + '0';
-   buffer[1] = '\0';
-   nSDL_DrawString(pScreen, pPiece->m_pFont, left+5, top + 15, buffer);
 #endif
+
+      nSDL_DrawString(pScreen, pFont, left, top, buffer);
+
+      int nCharWidth = nSDL_GetStringWidth( pFont, buffer );
+
+      if( nCharWidth <= 0 ) {
+	      printf("Less than 0: %d\n", nCharWidth);
+	      }
+
+      left += nCharWidth;
+   }
 }
 
  
