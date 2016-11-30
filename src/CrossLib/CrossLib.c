@@ -391,5 +391,39 @@ int ToggleCrossCellValue(CrossLib api, int nX, int nY)
    return CROSSLIB_OK;
 }
 
+int IsCrossNumberLockedOnRowColumn(CrossLib api, int nX, int nY, int nNumber)
+{
+   struct CrossSet* pC;
+   int x, y;
+   int width, height;
+   DEBUG_FUNC_NAME;
+
+   pC = (struct CrossSet*)api;
+
+   width = GetCrossWidth(api);
+   height = GetCrossHeight(api);
+
+   for(x=0; x<width; x++) {
+      if( x == nX )
+         continue;
+
+      if( GetCrossCellMarked(api, x, nY) == CROSSLIB_MARKED &&
+          GetCrossCellValue(api, x, nY, 0) == nNumber )
+         return CROSSLIB_HAS_VALUE;
+   }
+
+   for(y=0; y<height; y++) {
+      if( y == nY )
+         continue;
+
+      if( GetCrossCellMarked(api, nX, y) == CROSSLIB_MARKED &&
+          GetCrossCellValue(api, nX, y, 0) == nNumber )
+         return CROSSLIB_HAS_VALUE;
+   }
+
+   return CROSSLIB_NOT_HAS_VALUE;
+}
+
+
 
 

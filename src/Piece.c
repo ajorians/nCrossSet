@@ -6,6 +6,7 @@
 
 #ifdef USE_DIFFERENT_FONT
 static nSDL_Font* g_pFontBig = NULL;
+static nSDL_Font* g_pFontUsed = NULL;
 #endif
 static nSDL_Font* g_pFont = NULL;
 
@@ -19,6 +20,7 @@ void CreatePiece(struct Piece* pPiece, int x, int y, CrossLib cross, struct Metr
    if( g_pFont == NULL ) {
 #ifdef USE_DIFFERENT_FONT
       g_pFontBig = nSDL_LoadFont(NSDL_FONT_THIN, 255/*R*/, 255/*G*/, 255/*B*/);
+      g_pFontUsed = nSDL_LoadFont(NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/);
 #endif
       g_pFont = nSDL_LoadFont(NSDL_FONT_THIN, 127/*R*/, 127/*G*/, 127/*B*/);
    }
@@ -33,6 +35,8 @@ void FreePiece(struct Piece* pPiece)
 #ifdef USE_DIFFERENT_FONT
       nSDL_FreeFont(g_pFontBig);
       g_pFontBig = NULL;
+      nSDL_FreeFont(g_pFontUsed);
+      g_pFontUsed = NULL;
 #endif
 
       nSDL_FreeFont(g_pFont);
@@ -74,11 +78,15 @@ void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen)
 
    int i=0;
    for(; i<nNumbers; i++) {
-      buffer[0] = GetCrossCellValue(pPiece->m_Cross, pPiece->m_nX, pPiece->m_nY, i) + '0';
+      int n = GetCrossCellValue(pPiece->m_Cross, pPiece->m_nX, pPiece->m_nY, i);
+      buffer[0] = n + '0';
 
       nSDL_Font* pFont = g_pFont;
 #ifdef USE_DIFFERENT_FONT
-      if( i == 0 ) {
+      if( CROSSLIB_HAS_VALUE == IsCrossNumberLockedOnRowColumn( pPiece->m_Cross, pPiece->m_nX, pPiece->m_nY, n ) ) {
+         pFont = g_pFontUsed;
+      }
+      else if( i == 0 ) {
          pFont = g_pFontBig;
       }
 #endif

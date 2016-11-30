@@ -14,6 +14,9 @@ typedef void* CrossLib;
 #define CROSSLIB_GAMEOVER		(1)
 #define CROSSLIB_NOT_GAMEOVER		(0)
 
+#define CROSSLIB_HAS_VALUE		(1)
+#define CROSSLIB_NOT_HAS_VALUE		(0)
+
 //////////////////////////////////////////////
 //Initalization/Error checking/Mode functions
 //////////////////////////////////////////////
@@ -35,4 +38,6 @@ int IsCrossGameOver(CrossLib api);
 
 int ToggleCrossCellMarking(CrossLib api, int nX, int nY);
 int ToggleCrossCellValue(CrossLib api, int nX, int nY);
+
+int IsCrossNumberLockedOnRowColumn(CrossLib api, int nX, int nY, int nNumber);
 #endif
