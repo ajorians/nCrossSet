@@ -7,6 +7,7 @@ typedef void* CrossLib;
 #define CROSSLIB_BADARGUMENT		(-1)
 #define CROSSLIB_OUT_OF_MEMORY		(-2)
 #define CROSSLIB_NOT_PUZZLE_FILE	(-3)
+#define CROSSLIB_UNABLE			(-4)
 
 #define CROSSLIB_MARKED			(1)
 #define CROSSLIB_NOT_MARKED		(0)
@@ -38,6 +39,9 @@ int IsCrossGameOver(CrossLib api);
 
 int ToggleCrossCellMarking(CrossLib api, int nX, int nY);
 int ToggleCrossCellValue(CrossLib api, int nX, int nY);
+int SetCrossCellValue(CrossLib api, int nX, int nY, int nIndex);
 
 int IsCrossNumberLockedOnRowColumn(CrossLib api, int nX, int nY, int nNumber);
+
+int CrossDoSolveStep(CrossLib api);
 #endif

@@ -152,6 +152,10 @@ int GamePollEvents(struct Game* pGame)
                   ToggleCrossCellMarking(pGame->m_Cross, GetCurrentX(pGame->m_pSelector), GetCurrentY(pGame->m_pSelector));
                   break;
 
+               case SDLK_a:
+                  CrossDoSolveStep(pGame->m_Cross);
+                  break;
+
                default:
                   break;
             }
