@@ -1,8 +1,16 @@
+#ifdef _TINSPIRE
 #include <os.h>
 #include <libndls.h>
+#else
+#endif
 #include "MainMenu.h"
 //#include "StarDrawer.h"
 //#include "LevelColors.h"
+
+#ifndef _TINSPIRE
+#define SCREEN_WIDTH	(320)
+#define SCREEN_HEIGHT	(240)
+#endif
 
 void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pConfig, struct SDL_Surface* pScreen)
 {
@@ -11,8 +19,10 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
    pMenu->m_eChoice = Play;
    pMenu->m_nLevelNum = nLevelNum >= 1 ? nLevelNum : 1;
 
+#ifdef _TINSPIRE
    //pMenu->m_pBackground = NULL;
    pMenu->m_pFont = nSDL_LoadFont(NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/);
+#endif
 
    pMenu->m_pConfig = pConfig;
    pMenu->m_pScreen = pScreen;
@@ -22,7 +32,9 @@ void FreeMainMenu(struct MainMenu** ppMenu)
 {
    struct MainMenu* pMenu = *ppMenu;
    //FreeBackground(&pMenu->m_pBackground);
+#ifdef _TINSPIRE
    nSDL_FreeFont(pMenu->m_pFont);
+#endif
 
    pMenu->m_pConfig = NULL;//Does not own
    pMenu->m_pScreen = NULL;//Does not own

@@ -1,6 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#ifdef _TINSPIRE
 #include "ArchiveLib/ArchiveLib.h"
 
 struct Config
@@ -16,6 +17,7 @@ void SetBeatLevel(struct Config* pConfig, int nLevelNum, int nStars);
 void GetBeatLevel(struct Config* pConfig, int nLevelNum, int* pnStars);
 int GetDrawBackground(struct Config* pConfig);
 void SetDrawBackground(struct Config* pConfig, int nOn);
+#endif
 
 #endif
 

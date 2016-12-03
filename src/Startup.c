@@ -3,6 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#ifdef _TINSPIRE
 #include <os.h>
 
 #define NDLESS_CONFIG_FILE "/documents/ndless/ndless.cfg.tns"
@@ -38,3 +39,4 @@ void write_config_file() {
     fwrite("\n"CONFIG_LINE"\n", 1, sizeof("\n"CONFIG_LINE"\n")-1, fp);
     fclose(fp);
 }
+#endif

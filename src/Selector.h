@@ -1,7 +1,9 @@
 #ifndef SELECTOR_H
 #define SELECTOR_H
 
+#ifdef _TINSPIRE
 #include <os.h>
+#endif
 #include <CrossLib/CrossLib.h>
 #include "Metrics.h"
 

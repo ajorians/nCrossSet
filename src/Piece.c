@@ -1,14 +1,67 @@
 #include "Piece.h"
 
+#ifndef _TINSPIRE
+#include <SDL/SDL_ttf.h>
+#endif
+
 #define PIECE_BORDER_SIZE	(4)
 
 #define USE_DIFFERENT_FONT
 
-#ifdef USE_DIFFERENT_FONT
-static nSDL_Font* g_pFontBig = NULL;
-static nSDL_Font* g_pFontUsed = NULL;
+#ifdef _TINSPIRE
+typedef nSDL_Font Font;
+#else
+typedef TTF_Font  Font;
+#define NSDL_FONT_THIN  (-1)
 #endif
-static nSDL_Font* g_pFont = NULL;
+
+#ifdef USE_DIFFERENT_FONT
+static Font* g_pFontBig = NULL;
+static Font* g_pFontUsed = NULL;
+#endif
+static Font* g_pFont = NULL;
+
+Font* LoadFont(char* pstrName, int nID, int r, int g, int b, int size)
+{
+#ifdef _TINSPIRE
+   return nSDL_LoadFont(nID, r, g, b);
+#else
+   return TTF_OpenFont(pstrName, size);
+#endif
+}
+
+void FreeFont(Font* pFont)
+{
+#ifdef _TINSPIRE
+   nSDL_FreeFont(pFont);
+#else
+   TTF_CloseFont(pFont);
+#endif
+}
+
+void DrawText(SDL_Surface* pSurface, Font* pFont, int x, int y, char* pstrBuffer, int r, int g, int b)
+{
+#ifdef _TINSPIRE
+   nSDL_DrawString(pScreen, pFont, left, top, buffer);
+#else
+   SDL_Surface *message = NULL;
+   SDL_Color textColor = { r, g, b };
+   message = TTF_RenderText_Solid(pFont, pstrBuffer, textColor);
+   SDL_Rect rectSrc, rectDst;
+   rectSrc.w = 150;
+   rectSrc.h = 24;
+   rectSrc.x = 0;
+   rectSrc.y = 0;
+
+   rectDst.w = 150;
+   rectDst.h = 24;
+   rectDst.x = x;
+   rectDst.y = y;
+
+   SDL_BlitSurface(message, &rectSrc, pSurface, &rectDst);
+   SDL_FreeSurface(message);
+#endif
+}
 
 void CreatePiece(struct Piece* pPiece, int x, int y, CrossLib cross, struct Metrics* pMetrics)
 {
@@ -19,10 +72,10 @@ void CreatePiece(struct Piece* pPiece, int x, int y, CrossLib cross, struct Metr
 
    if( g_pFont == NULL ) {
 #ifdef USE_DIFFERENT_FONT
-      g_pFontBig = nSDL_LoadFont(NSDL_FONT_THIN, 255/*R*/, 255/*G*/, 255/*B*/);
-      g_pFontUsed = nSDL_LoadFont(NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/);
+      g_pFontBig = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 255/*R*/, 255/*G*/, 255/*B*/, 12);
+      g_pFontUsed = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 12);
 #endif
-      g_pFont = nSDL_LoadFont(NSDL_FONT_THIN, 127/*R*/, 127/*G*/, 127/*B*/);
+      g_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 127/*R*/, 127/*G*/, 127/*B*/, 12);
    }
 }
 
@@ -33,13 +86,13 @@ void FreePiece(struct Piece* pPiece)
 
    if( g_pFont != NULL ) {
 #ifdef USE_DIFFERENT_FONT
-      nSDL_FreeFont(g_pFontBig);
+      FreeFont(g_pFontBig);
       g_pFontBig = NULL;
-      nSDL_FreeFont(g_pFontUsed);
+      FreeFont(g_pFontUsed);
       g_pFontUsed = NULL;
 #endif
 
-      nSDL_FreeFont(g_pFont);
+      FreeFont(g_pFont);
       g_pFont = NULL;
    }
 }
@@ -81,19 +134,26 @@ void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen)
       int n = GetCrossCellValue(pPiece->m_Cross, pPiece->m_nX, pPiece->m_nY, i);
       buffer[0] = n + '0';
 
-      nSDL_Font* pFont = g_pFont;
+      Font* pFont = g_pFont;
+      int nR = 127, nG = 127, nB = 127;
 #ifdef USE_DIFFERENT_FONT
       if( CROSSLIB_HAS_VALUE == IsCrossNumberLockedOnRowColumn( pPiece->m_Cross, pPiece->m_nX, pPiece->m_nY, n ) ) {
          pFont = g_pFontUsed;
+         nR = 255, nG = 0, nB = 0;
       }
       else if( i == 0 ) {
          pFont = g_pFontBig;
+         nR = 255, nG = 255, n = 255;
       }
 #endif
 
-      nSDL_DrawString(pScreen, pFont, left, top, buffer);
+   DrawText(pScreen, pFont, left, top, buffer, nR, nG, nB);
 
+#ifdef _TINSPIRE
       int nCharWidth = nSDL_GetStringWidth( pFont, buffer );
+#else
+   int nCharWidth = 8;
+#endif
 
       if( nCharWidth <= 0 ) {
 	      printf("Less than 0: %d\n", nCharWidth);

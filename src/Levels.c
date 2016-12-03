@@ -1,7 +1,11 @@
 #include "Levels.h"
 #include <string.h>
 
+#ifndef _WIN32
 #define LEVEL(x) case x: strcpy(pstr, LEVEL_ ## x ); break;
+#else
+#define LEVEL(x) case x: strcpy_s(pstr, 2048, LEVEL_ ## x ); break;
+#endif
 void LevelLoad(char* pstr, int nLevelNum)
 {
    switch( nLevelNum ) {

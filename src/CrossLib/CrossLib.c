@@ -5,6 +5,8 @@
 #else
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 #endif
 #include "CrossLib/CrossLib.h"
 #include "Defines.h"
@@ -173,8 +175,10 @@ int CrossLibCreate(CrossLib* api, const char* pstrFile)
                         buffer[nSpotInBuffer++] = ch;
                      }
                      else {
-                        if( ch != ' ' && ch != '\n' && ch != '\r' )
+                        if (ch != ' ' && ch != '\n' && ch != '\r') {
+                           pstr--;
                            break;
+                        }
                         if( nSpotInBuffer == 0 )
                            continue;
                         buffer[nSpotInBuffer] = '\0';
@@ -460,7 +464,6 @@ int CrossDoSolveStep(CrossLib api)
             continue;
 
 	 //Check Row
-         int nX;
          for(nX=0; nX < width; nX++) {
             if( nX == x )
                continue;

@@ -1,3 +1,4 @@
+#ifdef _TINSPIRE
 #include <os.h>
 #include "Config.h"
 
@@ -91,3 +92,4 @@ void SetDrawBackground(struct Config* pConfig, int nOn)
 {
    pConfig->m_nDrawBackground = nOn;
 }
+#endif

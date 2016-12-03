@@ -1,5 +1,10 @@
 #include "Metrics.h"
 
+#ifndef _TINSPIRE
+#include <stdlib.h>
+#define SCREEN_WIDTH	(320)
+#define SCREEN_HEIGHT	(240)
+#endif
 #define PIECE_GAP_HORIZONTAL	(2)
 #define PIECE_GAP_VERTICAL	(2)
 

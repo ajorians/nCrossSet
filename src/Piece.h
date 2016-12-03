@@ -1,7 +1,9 @@
 #ifndef PIECE_H
 #define PIECE_H
 
+#ifdef _TINSPIRE
 #include <os.h>
+#endif
 #include "SDL/SDL.h"
 #include <CrossLib/CrossLib.h>
 #include "Metrics.h"

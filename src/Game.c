@@ -1,7 +1,14 @@
+#ifdef _TINSPIRE
 #include <os.h>
 #include <libndls.h>
+#endif
 #include "Game.h"
 //#include "Indicators.h"
+
+#ifndef _TINSPIRE
+#define SCREEN_WIDTH	(320)
+#define SCREEN_HEIGHT	(240)
+#endif
 
 void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, struct Config* pConfig, struct SDL_Surface* pScreen)
 {

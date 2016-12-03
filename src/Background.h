@@ -1,7 +1,9 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
+#ifdef _TINSPIRE
 #include <os.h>
+#endif
 #include "SDL/SDL.h"
 #include "Config.h"
 

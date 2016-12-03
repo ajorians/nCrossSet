@@ -1,7 +1,9 @@
 #ifndef METRICS_H
 #define METRICS_H
 
+#ifdef _TINSPIRE
 #include <os.h>
+#endif
 #include <CrossLib/CrossLib.h>
 
 struct Metrics

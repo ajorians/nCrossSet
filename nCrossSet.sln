@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nCrossSet", "src\nCrossSet.vcxproj", "{6312CBD0-7DE7-467D-AF1B-AC4D8B9F38BE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{08E7E59B-F8CD-492F-9673-01731430DA3D} = {08E7E59B-F8CD-492F-9673-01731430DA3D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CrossLib", "src\CrossLib\CrossLib.vcxproj", "{08E7E59B-F8CD-492F-9673-01731430DA3D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,14 @@ Global
 		{6312CBD0-7DE7-467D-AF1B-AC4D8B9F38BE}.Release|x64.Build.0 = Release|x64
 		{6312CBD0-7DE7-467D-AF1B-AC4D8B9F38BE}.Release|x86.ActiveCfg = Release|Win32
 		{6312CBD0-7DE7-467D-AF1B-AC4D8B9F38BE}.Release|x86.Build.0 = Release|Win32
+		{08E7E59B-F8CD-492F-9673-01731430DA3D}.Debug|x64.ActiveCfg = Debug|x64
+		{08E7E59B-F8CD-492F-9673-01731430DA3D}.Debug|x64.Build.0 = Debug|x64
+		{08E7E59B-F8CD-492F-9673-01731430DA3D}.Debug|x86.ActiveCfg = Debug|Win32
+		{08E7E59B-F8CD-492F-9673-01731430DA3D}.Debug|x86.Build.0 = Debug|Win32
+		{08E7E59B-F8CD-492F-9673-01731430DA3D}.Release|x64.ActiveCfg = Release|x64
+		{08E7E59B-F8CD-492F-9673-01731430DA3D}.Release|x64.Build.0 = Release|x64
+		{08E7E59B-F8CD-492F-9673-01731430DA3D}.Release|x86.ActiveCfg = Release|Win32
+		{08E7E59B-F8CD-492F-9673-01731430DA3D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

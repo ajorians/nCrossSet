@@ -1,5 +1,8 @@
 #include "Selector.h"
 #include "SDL/SDL_gfxPrimitives.h"
+#ifndef _TINSPIRE
+#include <stdlib.h>
+#endif
 
 #define SELECTOR_LINE_WIDTH     (4)
 

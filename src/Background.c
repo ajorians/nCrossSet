@@ -8,7 +8,9 @@ void CreateBackground(struct Background** ppBackground, struct SDL_Surface* pScr
    struct Background* pBackground = *ppBackground;
    pBackground->m_pScreen = pScreen;
    pBackground->m_pConfig = pConfig;
+#ifdef _TINSPIRE
    pBackground->m_pBackground = nSDL_LoadImage(image_BackGroundWide);
+#endif
    pBackground->m_nX = 0;
 }
 
@@ -16,13 +18,16 @@ void FreeBackground(struct Background** ppBackground) {
   struct Background* pBackground = *ppBackground;
   pBackground->m_pScreen = NULL;//Does not own
   pBackground->m_pConfig = NULL;//Does not own
+#ifdef _TINSPIRE
   SDL_FreeSurface(pBackground->m_pBackground);
   pBackground->m_pBackground = NULL;
+#endif
 
   free(pBackground);
 }
 
 void DrawBackground(struct Background* pBackground) {
+#ifdef _TINSPIRE
    if( !is_classic ) {
        SDL_Rect rectSrc, rectDst, rectDst2;
        rectSrc.w = GRAPHIC_WIDTH;
@@ -51,6 +56,7 @@ void DrawBackground(struct Background* pBackground) {
    } else {
        SDL_FillRect(pBackground->m_pScreen, NULL, SDL_MapRGB(pBackground->m_pScreen->format, 255, 255, 255));
    }
+#endif
 }
 
  

@@ -1,5 +1,7 @@
+#ifdef _TINSPIRE
 #include <os.h>
 #include <libndls.h>
+#endif
 #include <SDL/SDL.h>
 #include "Startup.h"
 #include "MainMenu.h"
@@ -8,18 +10,36 @@
 //#include "Help.h"
 #include "Config.h"
 #include "Levels.h"
+#ifndef _TINSPIRE
+#include <SDL/SDL_ttf.h>
+#endif
+
+#ifdef _WIN32
+#define SCREEN_WIDTH	(320)
+#define SCREEN_HEIGHT	(240)
+#endif
 
 #define SCREEN_BIT_DEPTH        (16)
+#ifdef _TINSPIRE
 #define SCREEN_VIDEO_MODE (SDL_SWSURFACE|SDL_FULLSCREEN|SDL_HWPALETTE)
+#else
+#define SCREEN_VIDEO_MODE (SDL_SWSURFACE|SDL_HWPALETTE)
+#endif
 
+#ifdef _WIN32
+int WinMain(int argc, char *argv[])
+#else
 int main(int argc, char *argv[])
+#endif
 {
+#ifdef _TINSPIRE
    ArchiveSetCurrentDirectory( argv[0] );
    if( argc != 2 ) {
       if( !config_file_already_written() ) {
          write_config_file();
       }
    }
+#endif
 
    printf("Initializing SDL.\n");
 
@@ -49,10 +69,20 @@ int main(int argc, char *argv[])
       SDL_ShowCursor(SDL_DISABLE);
    }
 
+#ifndef _TINSPIRE
+   //Initialize SDL_ttf
+   if (TTF_Init() == -1)
+   {
+      exit(1);
+   }
+#endif
+
    int nLevelNumber = -1;
    char strLevelData[2048];
    struct Config* pConfig = NULL;
+#ifdef _TINSPIRE
    CreateConfig(&pConfig);
+#endif
    while(1) {
       int bShowHelp = 0, bShowOptions = 0;
       /*if( argc != 2 )*/ {
@@ -114,9 +144,16 @@ int main(int argc, char *argv[])
       }
    }
 
+#ifdef _TINSPIRE
    FreeConfig(&pConfig);
+#endif
 
    printf("Quitting SDL.\n");
+
+#ifndef _TINSPIRE
+   //Quit SDL_ttf
+   TTF_Quit();
+#endif
 
    /* Shutdown all subsystems */
    SDL_Quit();

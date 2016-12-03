@@ -1,7 +1,9 @@
 #ifndef MAINMENU_H
 #define MAINMENU_H
 
+#ifdef _TINSPIRE
 #include <os.h>
+#endif
 #include "SDL/SDL.h"
 //#include "Background.h"
 #include "Config.h"
