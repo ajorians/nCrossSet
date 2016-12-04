@@ -18,7 +18,7 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
    *ppMenu = malloc(sizeof(struct MainMenu));
    struct MainMenu* pMenu = (*ppMenu);
    pMenu->m_eChoice = Play;
-   pMenu->m_nLevelNum = nLevelNum >= 1 ? nLevelNum : 1;
+   pMenu->m_nLevelNum = 29;// nLevelNum >= 1 ? nLevelNum : 1;
 
    //pMenu->m_pBackground = NULL;
    pMenu->m_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 12);

@@ -287,6 +287,10 @@ int GetCrossCellValueCount(CrossLib api, int nX, int nY)
 
    pC = (struct CrossSet*)api;
    pCell = GetAt(pC->m_pBoard, nX, nY);
+#ifdef RUN_SAFE
+   if (pCell == NULL)
+      return -1;
+#endif
    for(n=0; n<MAX_CELL_VALUES; n++) {
       //printf("For X: %d; Y: %d; value is: %d\n", nX, nY, pCell->m_aValues[n]);
       if( pCell->m_aValues[n] < 0 )
@@ -448,83 +452,181 @@ int IsCrossNumberLockedOnRowColumn(CrossLib api, int nX, int nY, int nNumber)
 
 int CrossDoSolveStep(CrossLib api)
 {
-   int x,y,width,height;
-   int nX, nY, nPotentialIndex, n, numbers, value;
+   int x, y, width, height;
+   int nX, nY, nPotentialIndex, n, i, numbers, value, foundNumberMultipleTimes;
    struct CrossSet* pC;
    DEBUG_FUNC_NAME;
 
    pC = (struct CrossSet*)api;
 
-   width = GetCrossWidth(api); 
+   width = GetCrossWidth(api);
    height = GetCrossHeight(api);
 
-   for(x=0; x<width; x++) {
-      for(y=0; y<height; y++) {
-         if( CROSSLIB_MARKED != GetCrossCellMarked( api, x, y ) )
+   for (x = 0; x < width; x++) {
+      for (y = 0; y < height; y++) {
+         if (CROSSLIB_MARKED != GetCrossCellMarked(api, x, y))
             continue;
 
-	 //Check Row
-         for(nX=0; nX < width; nX++) {
-            if( nX == x )
+         //Check Row
+         for (nX = 0; nX < width; nX++) {
+            if (nX == x)
                continue;
 
-            if( CROSSLIB_MARKED == GetCrossCellMarked( api, nX, y ) )
+            if (CROSSLIB_MARKED == GetCrossCellMarked(api, nX, y))
                continue;
 
-	    numbers = GetCrossCellValueCount(api, nX, y);
-	    nPotentialIndex = -1;
-	    for(n=0; n<numbers; n++) {
+            numbers = GetCrossCellValueCount(api, nX, y);
+            nPotentialIndex = -1;
+            for (n = 0; n < numbers; n++) {
                value = GetCrossCellValue(api, nX, y, n);
-	       if( CROSSLIB_HAS_VALUE == IsCrossNumberLockedOnRowColumn(api, nX, y, value) )
+               if (CROSSLIB_HAS_VALUE == IsCrossNumberLockedOnRowColumn(api, nX, y, value))
                   continue;
 
-               if( nPotentialIndex == -1 ) {
+               if (nPotentialIndex == -1) {
                   nPotentialIndex = n;
                }
-	       else {
+               else {
                   nPotentialIndex = -1;
-		  break;
+                  break;
                }
-	    }
+            }
 
-	    if( nPotentialIndex == -1 )
+            if (nPotentialIndex == -1)
                continue;
 
-	    SetCrossCellValue(api, nX, y, nPotentialIndex);
+            SetCrossCellValue(api, nX, y, nPotentialIndex);
             ToggleCrossCellMarking(api, nX, y);
             return CROSSLIB_OK;
          }
 
          //Check Column
-	 for(nY=0; nY < height; nY++) {
-	    if( nY == y )
-	       continue;
-
-	    if( CROSSLIB_MARKED == GetCrossCellMarked( api, x, nY ) )
-	       continue;
-
-	    numbers = GetCrossCellValueCount(api, x, nY);
-	    nPotentialIndex = -1;
-	    for(n=0; n<numbers; n++) {
-	       value = GetCrossCellValue(api, x, nY, n);
-	       if( CROSSLIB_HAS_VALUE == IsCrossNumberLockedOnRowColumn(api, x, nY, value) )
-	           continue;
-
-              if( nPotentialIndex == -1 ) {
-                 nPotentialIndex = n;
-              }
-              else {
-	         nPotentialIndex = -1;
-	         break;
-	      }
-	    }
-
-   	    if( nPotentialIndex == -1 )
+         for (nY = 0; nY < height; nY++) {
+            if (nY == y)
                continue;
 
-  	    SetCrossCellValue(api, x, nY, nPotentialIndex);
-	    ToggleCrossCellMarking(api, x, nY);
-	    return CROSSLIB_OK;
+            if (CROSSLIB_MARKED == GetCrossCellMarked(api, x, nY))
+               continue;
+
+            numbers = GetCrossCellValueCount(api, x, nY);
+            nPotentialIndex = -1;
+            for (n = 0; n < numbers; n++) {
+               value = GetCrossCellValue(api, x, nY, n);
+               if (CROSSLIB_HAS_VALUE == IsCrossNumberLockedOnRowColumn(api, x, nY, value))
+                  continue;
+
+               if (nPotentialIndex == -1) {
+                  nPotentialIndex = n;
+               }
+               else {
+                  nPotentialIndex = -1;
+                  break;
+               }
+            }
+
+            if (nPotentialIndex == -1)
+               continue;
+
+            SetCrossCellValue(api, x, nY, nPotentialIndex);
+            ToggleCrossCellMarking(api, x, nY);
+            return CROSSLIB_OK;
+         }
+      }
+   }
+
+   //Make sure each row/column can have each of the numbers
+   for (n = 1; n <= width; n++) {
+      for (y = 0; y < height; y++) {
+         nPotentialIndex = -1;
+         foundNumberMultipleTimes = 0;
+         for (x = 0; x < width; x++) {
+            if (GetCrossCellMarked(api, x, y) == CROSSLIB_MARKED ) {
+               if (GetCrossCellValue(api, x, y, 0) == n) {
+                  foundNumberMultipleTimes = 1;
+                  break;
+               }
+               else {
+                  continue;
+               }
+            }
+
+            numbers = GetCrossCellValueCount(api, x, y);
+            for (i = 0; i < numbers; i++) {
+               if (GetCrossCellValue(api, x, y, i) == n) {
+                  if (nPotentialIndex != -1) {
+                     //More than one spot could have this number
+                     foundNumberMultipleTimes = 1;
+                     break;
+                  }
+                  else {
+                     nPotentialIndex = x;
+                     break;
+                  }
+               }
+            }
+
+            if (foundNumberMultipleTimes == 1)
+               break;
+         }
+
+         if (foundNumberMultipleTimes == 0 && nPotentialIndex != -1) {
+            //Only one spot on this row could have the number n
+            numbers = GetCrossCellValueCount(api, nPotentialIndex, y);
+            for (i = 0; i < numbers; i++) {
+               if (GetCrossCellValue(api, nPotentialIndex, y, i) == n) {
+                  SetCrossCellValue(api, nPotentialIndex, y, i);
+                  ToggleCrossCellMarking(api, nPotentialIndex, y);
+                  return CROSSLIB_OK;
+               }
+            }
+         }
+      }
+   }
+
+   //Now checking columns
+   for (n = 1; n <= width; n++) {
+      for (x = 0; x < width; x++) {
+         nPotentialIndex = -1;
+         foundNumberMultipleTimes = 0;
+         for (y = 0; y < height; y++) {
+            if (GetCrossCellMarked(api, x, y) == CROSSLIB_MARKED ) {
+               if (GetCrossCellValue(api, x, y, 0) == n) {
+                  foundNumberMultipleTimes = 1;
+                  break;
+               }
+               else {
+                  continue;
+               }
+            }
+
+            numbers = GetCrossCellValueCount(api, x, y);
+            for (i = 0; i < numbers; i++) {
+               if (GetCrossCellValue(api, x, y, i) == n) {
+                  if (nPotentialIndex != -1) {
+                     //More than one spot could have this number
+                     foundNumberMultipleTimes = 1;
+                     break;
+                  }
+                  else {
+                     nPotentialIndex = y;
+                     break;
+                  }
+               }
+            }
+
+            if (foundNumberMultipleTimes == 1)
+               break;
+         }
+
+         if (foundNumberMultipleTimes == 0 && nPotentialIndex != -1) {
+            //Only one spot on this row could have the number n
+            numbers = GetCrossCellValueCount(api, x, nPotentialIndex);
+            for (i = 0; i < numbers; i++) {
+               if (GetCrossCellValue(api, x, nPotentialIndex, i) == n) {
+                  SetCrossCellValue(api, x, nPotentialIndex, i);
+                  ToggleCrossCellMarking(api, x, nPotentialIndex);
+                  return CROSSLIB_OK;
+               }
+            }
          }
       }
    }
