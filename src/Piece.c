@@ -1,67 +1,16 @@
 #include "Piece.h"
 
-#ifndef _TINSPIRE
-#include <SDL/SDL_ttf.h>
-#endif
+#include "Font.h"
 
 #define PIECE_BORDER_SIZE	(4)
 
 #define USE_DIFFERENT_FONT
-
-#ifdef _TINSPIRE
-typedef nSDL_Font Font;
-#else
-typedef TTF_Font  Font;
-#define NSDL_FONT_THIN  (-1)
-#endif
 
 #ifdef USE_DIFFERENT_FONT
 static Font* g_pFontBig = NULL;
 static Font* g_pFontUsed = NULL;
 #endif
 static Font* g_pFont = NULL;
-
-Font* LoadFont(char* pstrName, int nID, int r, int g, int b, int size)
-{
-#ifdef _TINSPIRE
-   return nSDL_LoadFont(nID, r, g, b);
-#else
-   return TTF_OpenFont(pstrName, size);
-#endif
-}
-
-void FreeFont(Font* pFont)
-{
-#ifdef _TINSPIRE
-   nSDL_FreeFont(pFont);
-#else
-   TTF_CloseFont(pFont);
-#endif
-}
-
-void DrawText(SDL_Surface* pSurface, Font* pFont, int x, int y, char* pstrBuffer, int r, int g, int b)
-{
-#ifdef _TINSPIRE
-   nSDL_DrawString(pScreen, pFont, left, top, buffer);
-#else
-   SDL_Surface *message = NULL;
-   SDL_Color textColor = { r, g, b };
-   message = TTF_RenderText_Solid(pFont, pstrBuffer, textColor);
-   SDL_Rect rectSrc, rectDst;
-   rectSrc.w = 150;
-   rectSrc.h = 24;
-   rectSrc.x = 0;
-   rectSrc.y = 0;
-
-   rectDst.w = 150;
-   rectDst.h = 24;
-   rectDst.x = x;
-   rectDst.y = y;
-
-   SDL_BlitSurface(message, &rectSrc, pSurface, &rectDst);
-   SDL_FreeSurface(message);
-#endif
-}
 
 void CreatePiece(struct Piece* pPiece, int x, int y, CrossLib cross, struct Metrics* pMetrics)
 {

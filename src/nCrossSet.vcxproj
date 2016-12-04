@@ -137,24 +137,28 @@
   <ItemGroup>
     <ClCompile Include="Background.c" />
     <ClCompile Include="Config.c" />
+    <ClCompile Include="Font.c" />
     <ClCompile Include="Game.c" />
     <ClCompile Include="Levels.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="MainMenu.c" />
     <ClCompile Include="Metrics.c" />
     <ClCompile Include="Piece.c" />
+    <ClCompile Include="Replacements.c" />
     <ClCompile Include="Selector.c" />
     <ClCompile Include="Startup.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="Font.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameBackgroundWide.h" />
     <ClInclude Include="Levels.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Metrics.h" />
     <ClInclude Include="Piece.h" />
+    <ClInclude Include="Replacements.h" />
     <ClInclude Include="Selector.h" />
     <ClInclude Include="Startup.h" />
   </ItemGroup>

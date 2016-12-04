@@ -4,6 +4,7 @@
 #else
 #endif
 #include "MainMenu.h"
+#include "Replacements.h"
 //#include "StarDrawer.h"
 //#include "LevelColors.h"
 
@@ -19,10 +20,8 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
    pMenu->m_eChoice = Play;
    pMenu->m_nLevelNum = nLevelNum >= 1 ? nLevelNum : 1;
 
-#ifdef _TINSPIRE
    //pMenu->m_pBackground = NULL;
-   pMenu->m_pFont = nSDL_LoadFont(NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/);
-#endif
+   pMenu->m_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 12);
 
    pMenu->m_pConfig = pConfig;
    pMenu->m_pScreen = pScreen;
@@ -32,9 +31,7 @@ void FreeMainMenu(struct MainMenu** ppMenu)
 {
    struct MainMenu* pMenu = *ppMenu;
    //FreeBackground(&pMenu->m_pBackground);
-#ifdef _TINSPIRE
-   nSDL_FreeFont(pMenu->m_pFont);
-#endif
+   FreeFont(pMenu->m_pFont);
 
    pMenu->m_pConfig = NULL;//Does not own
    pMenu->m_pScreen = NULL;//Does not own
@@ -58,6 +55,14 @@ int PollEvents(struct MainMenu* pMenu)
                   printf("Hit Escape!n");
                   pMenu->m_eChoice = Quit;
                   return 0;
+                  break;
+
+               case SDLK_LEFT:
+                  pMenu->m_nLevelNum--;
+                  break;
+
+               case SDLK_RIGHT:
+                  pMenu->m_nLevelNum++;
                   break;
 
                case SDLK_SPACE:
@@ -103,6 +108,19 @@ void draw_rectangle(SDL_Surface* Surface, Uint32 color, Uint16 x, Uint16 y, Uint
 
 void UpdateDisplay(struct MainMenu* pMenu)
 {
+   SDL_Rect DestRect;
+
+   // Draw the top line
+   DestRect.x = 0;
+   DestRect.y = 0;
+   DestRect.w = SCREEN_WIDTH;
+   DestRect.h = SCREEN_HEIGHT;
+   SDL_FillRect(pMenu->m_pScreen, &DestRect, SDL_MapRGB(pMenu->m_pScreen->format, 255, 255, 255));
+
+   char buffer[5];
+   IntToA(buffer, 5, pMenu->m_nLevelNum);
+   DrawText(pMenu->m_pScreen, pMenu->m_pFont, 50, 50, buffer, 0, 0, 0);
+
    if( pMenu->m_eChoice == Play )
       draw_rectangle(pMenu->m_pScreen, SDL_MapRGB(pMenu->m_pScreen->format, 255, 0, 0), 160, 145, 95, 26, 1);
    //else if( m_eChoice == HighScore )

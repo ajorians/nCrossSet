@@ -45,6 +45,12 @@
     <ClCompile Include="Startup.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Font.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Replacements.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h">
@@ -75,6 +81,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Startup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Replacements.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

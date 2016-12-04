@@ -162,8 +162,8 @@ int CrossLibCreate(CrossLib* api, const char* pstrFile)
                }
             }
 
-            for(x=0; x<nWidth; x++) {
-               for(y=0; y<nHeight; y++) {
+            for(y=0; y<nHeight; y++) {
+               for (x = 0; x<nWidth; x++) {
                   int nMarked = -1;
 
                   struct Cell* pCell = GetAt(pC->m_pBoard, x, y);

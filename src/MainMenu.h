@@ -7,6 +7,7 @@
 #include "SDL/SDL.h"
 //#include "Background.h"
 #include "Config.h"
+#include "Font.h"
 
 //#define SHOW_LEVEL_DIMENSIONS
 
@@ -23,7 +24,7 @@ struct MainMenu
    enum MenuChoice m_eChoice;
    int m_nLevelNum;
    //struct Background* m_pBackground;
-   struct nSDL_Font *m_pFont;
+   Font *m_pFont;
    struct Config* m_pConfig;//Does not own
    struct SDL_Surface* m_pScreen;//Does not own
 };
