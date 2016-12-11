@@ -56,6 +56,15 @@ void LevelLoad(char* pstr, int nLevelNum)
    LEVEL(47);
    /*LEVEL(48);*/
    LEVEL(49);
+   /*LEVEL(50);
+   LEVEL(51);
+   LEVEL(52);*/
+   LEVEL(53);
+   LEVEL(54);
+   LEVEL(55);
+   /*LEVEL(56);*/
+   LEVEL(57);
+   LEVEL(58);
    }
 }
 
