@@ -15,9 +15,9 @@ void LevelLoad(char* pstr, int nLevelNum)
    LEVEL(6);
    LEVEL(7);
    LEVEL(8);
-   /*   LEVEL(9);
+   LEVEL(9);
    LEVEL(10);
-   LEVEL(11);
+   /*LEVEL(11);
    LEVEL(12);
    LEVEL(13);
    LEVEL(14);
@@ -39,10 +39,10 @@ void LevelLoad(char* pstr, int nLevelNum)
    LEVEL(30);
    LEVEL(31);
    LEVEL(32);
-   /*LEVEL(33);
+   LEVEL(33);
    LEVEL(34);
    LEVEL(35);
-   LEVEL(36);*/
+   LEVEL(36);
    LEVEL(37);
    LEVEL(38);
    LEVEL(39);
@@ -62,7 +62,7 @@ void LevelLoad(char* pstr, int nLevelNum)
    LEVEL(53);
    LEVEL(54);
    LEVEL(55);
-   /*LEVEL(56);*/
+   LEVEL(56);
    LEVEL(57);
    LEVEL(58);
    }
