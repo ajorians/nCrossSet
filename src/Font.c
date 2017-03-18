@@ -21,7 +21,7 @@ void FreeFont(Font* pFont)
 void DrawText(SDL_Surface* pSurface, Font* pFont, int x, int y, char* pstrBuffer, int r, int g, int b)
 {
 #ifdef _TINSPIRE
-   nSDL_DrawString(pScreen, pFont, left, top, buffer);
+   nSDL_DrawString(pSurface, pFont, x, y, pstrBuffer);
 #else
    SDL_Surface *message = NULL;
    SDL_Color textColor = { r, g, b };

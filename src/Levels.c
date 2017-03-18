@@ -27,8 +27,8 @@ void LevelLoad(char* pstr, int nLevelNum)
    LEVEL(18);
    LEVEL(19);
    LEVEL(20);
-   /*LEVEL(21);
-   LEVEL(22);
+   LEVEL(21);
+   /*LEVEL(22);
    LEVEL(23);*/
    LEVEL(24);
    LEVEL(25);

@@ -10,7 +10,7 @@
 void IntToA(char* pstrBuffer, int bufferSize, int n)
 {
 #ifdef _TINSPIRE
-   sprintf(buffer, "%d", n);
+   sprintf(pstrBuffer, "%d", n);
 #else
    sprintf_s(pstrBuffer, bufferSize, "%d", n);
 #endif
