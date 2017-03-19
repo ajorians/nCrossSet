@@ -13,12 +13,17 @@
 #define SCREEN_HEIGHT	(240)
 #endif
 
+void UpdateSelectedItems(struct MainMenu* pMenu);
+
 void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pConfig, struct SDL_Surface* pScreen)
 {
    *ppMenu = malloc(sizeof(struct MainMenu));
    struct MainMenu* pMenu = (*ppMenu);
    pMenu->m_eChoice = Play;
+   pMenu->m_eSelection = Levels;
    pMenu->m_nLevelNum = nLevelNum >= 1 ? nLevelNum : 1;
+   pMenu->m_nCurrentCategory = (pMenu->m_nLevelNum-1) / 8;
+   pMenu->m_nCurrentLevel = (pMenu->m_nLevelNum-1) - (pMenu->m_nCurrentCategory * 8);
 
    for(unsigned int i=0; i<sizeof(pMenu->m_Levels)/sizeof(pMenu->m_Levels[0]); i++) {
       CreateMenuItem(&pMenu->m_Levels[i], i, Category);
@@ -27,6 +32,8 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
    for(unsigned int i=0; i<sizeof(pMenu->m_ChoiceLevels)/sizeof(pMenu->m_ChoiceLevels[0]); i++) {
       CreateMenuItem(&pMenu->m_ChoiceLevels[i], i, Level);
    }
+
+   UpdateSelectedItems(pMenu);
 
    //pMenu->m_pBackground = NULL;
    pMenu->m_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 12);
@@ -66,17 +73,80 @@ int PollEvents(struct MainMenu* pMenu)
                   break;
 
                case SDLK_LEFT:
-                  pMenu->m_nLevelNum--;
+                  if( pMenu->m_eSelection == Levels ) {
+                     if( pMenu->m_nCurrentLevel > 0 ) {
+                        pMenu->m_nCurrentLevel--;
+                        pMenu->m_nLevelNum--;
+			UpdateSelectedItems(pMenu);
+		     } 
+		  }
+		  else if( pMenu->m_eSelection == Categories ) {
+                     if( pMenu->m_nCurrentCategory > 0 ) {
+                        pMenu->m_nCurrentCategory--;
+                        pMenu->m_nCurrentLevel = 0;
+                        UpdateSelectedItems(pMenu);
+                     }
+                  }
                   break;
 
                case SDLK_RIGHT:
-                  pMenu->m_nLevelNum++;
+		  if( pMenu->m_eSelection == Levels ) {
+                     if( pMenu->m_nCurrentLevel < 7 ) {
+                        pMenu->m_nCurrentLevel++;
+                        pMenu->m_nLevelNum++;
+			UpdateSelectedItems(pMenu);
+                     }
+		  }
+		  else if( pMenu->m_eSelection == Categories ) {
+                     if( pMenu->m_nCurrentCategory < 6 ) {
+                        pMenu->m_nCurrentCategory++;
+			pMenu->m_nCurrentLevel = 0;
+			UpdateSelectedItems(pMenu);
+		     }
+		  }
                   break;
+
+	       case SDLK_UP:
+		  if( pMenu->m_eSelection == Levels ) {
+                     if( pMenu->m_nCurrentLevel < 4 ) {
+                        pMenu->m_eSelection = Categories;
+                        UpdateSelectedItems(pMenu);
+		     }
+		     else {
+                        pMenu->m_nCurrentLevel -= 4;
+			UpdateSelectedItems(pMenu);
+		     }
+		  }
+                  else if( pMenu->m_eSelection == Categories ) {
+		  }
+		  break;
+
+	       case SDLK_DOWN:
+		  if( pMenu->m_eSelection == Levels ) {
+                     if( pMenu->m_nCurrentLevel < 4 ) {
+                        pMenu->m_nCurrentLevel += 4;
+			UpdateSelectedItems(pMenu);
+		     }
+		     else {
+                        //TODO
+		     }
+                  }
+		  else if( pMenu->m_eSelection == Categories ) {
+                     pMenu->m_eSelection = Levels;
+		     UpdateSelectedItems(pMenu);
+                  }
+		  break;
 
                case SDLK_SPACE:
                case SDLK_RETURN:
                case SDLK_LCTRL:
-                  return 0;
+		  if( pMenu->m_eSelection == Levels ) {
+                     return 0;
+		  }
+		  else if( pMenu->m_eSelection == Categories ) {
+                     pMenu->m_eSelection = Levels;
+		     UpdateSelectedItems(pMenu);
+		  }
                   break;
 
                default:
@@ -127,11 +197,13 @@ void UpdateDisplay(struct MainMenu* pMenu)
       MenuItemDraw(&pMenu->m_Levels[i], pMenu->m_pScreen);
    }
 
-   for(unsigned int i=0; i<sizeof(pMenu->m_ChoiceLevels)/sizeof(pMenu->m_ChoiceLevels[0]); i++) {
-      MenuItemDraw(&pMenu->m_ChoiceLevels[i], pMenu->m_pScreen);
+   if( pMenu->m_eSelection != Categories ) {
+      for(unsigned int i=0; i<sizeof(pMenu->m_ChoiceLevels)/sizeof(pMenu->m_ChoiceLevels[0]); i++) {
+         MenuItemDraw(&pMenu->m_ChoiceLevels[i], pMenu->m_pScreen);
+      }
    }
 
-   char buffer[5];
+   /*char buffer[5];
    IntToA(buffer, 5, pMenu->m_nLevelNum);
    DrawText(pMenu->m_pScreen, pMenu->m_pFont, 50, 50, buffer, 0, 0, 0);
 
@@ -141,7 +213,7 @@ void UpdateDisplay(struct MainMenu* pMenu)
       //draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 160, 172, 106, 24, 1);
    else if( pMenu->m_eChoice == Help )
       draw_rectangle(pMenu->m_pScreen, SDL_MapRGB(pMenu->m_pScreen->format, 255, 0, 0), 160, 199, 52, 25, 1);
-
+*/
    SDL_UpdateRect(pMenu->m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
@@ -175,3 +247,16 @@ int MainMenuGetLevelNum(struct MainMenu* pMenu)
    return pMenu->m_nLevelNum;
 }
 
+void UpdateSelectedItems(struct MainMenu* pMenu)
+{
+   for(unsigned int i=0; i<sizeof(pMenu->m_Levels)/sizeof(pMenu->m_Levels[0]); i++) {
+      SetMenuItemSelected(&pMenu->m_Levels[i], 0);
+   }
+
+   for(unsigned int i=0; i<sizeof(pMenu->m_ChoiceLevels)/sizeof(pMenu->m_ChoiceLevels[0]); i++) {
+      SetMenuItemSelected(&pMenu->m_ChoiceLevels[i], 0);
+   }
+
+   SetMenuItemSelected(&pMenu->m_Levels[pMenu->m_nCurrentCategory], pMenu->m_eSelection == Levels ? 2 : 1);
+   SetMenuItemSelected(&pMenu->m_ChoiceLevels[pMenu->m_nCurrentLevel], 1);
+}

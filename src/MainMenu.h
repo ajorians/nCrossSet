@@ -20,12 +20,22 @@ enum MenuChoice
    Quit
 };
 
+enum SelectionLocation
+{
+   Categories,
+   Levels,
+   Other
+};
+
 struct MainMenu
 {
    enum MenuChoice m_eChoice;
+   enum SelectionLocation m_eSelection;
    int m_nLevelNum;
    struct MenuItem m_Levels[7];
    struct MenuItem m_ChoiceLevels[8];
+   int m_nCurrentCategory;
+   int m_nCurrentLevel;
    //struct Background* m_pBackground;
    Font *m_pFont;
    struct Config* m_pConfig;//Does not own

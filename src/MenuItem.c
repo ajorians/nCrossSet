@@ -16,6 +16,7 @@ void CreateMenuItem(struct MenuItem* pMenuItem, int x, enum MenuItemType eMenuTy
 {
    pMenuItem->m_nX = x;
    pMenuItem->m_eMenuType = eMenuType;
+   pMenuItem->m_nSelected = 0;
 
    if( g_pFont == NULL ) {
 #ifdef USE_DIFFERENT_FONT
@@ -39,6 +40,11 @@ void FreeMenuItem(struct MenuItem* pMenuItem)
       FreeFont(g_pFont);
       g_pFont = NULL;
    }
+}
+
+void SetMenuItemSelected(struct MenuItem* pMenuItem, int nSelected)
+{
+   pMenuItem->m_nSelected = nSelected;
 }
 
 void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen)
@@ -65,11 +71,13 @@ void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen)
       rect.y = nY;
    }
 
-   //if(  ) {
+   if( pMenuItem->m_nSelected == 0 ) {
       SDL_FillRect(pScreen, &rect, SDL_MapRGB(pScreen->format, 255, 255, 255));
-   //} else {
-   //   SDL_FillRect(pScreen, &rect, SDL_MapRGB(pScreen->format, 255, 255, 255));
-   //}
+   } else if( pMenuItem->m_nSelected == 2 ) {
+      SDL_FillRect(pScreen, &rect, SDL_MapRGB(pScreen->format, 0, 0, 255));
+   } else {
+      SDL_FillRect(pScreen, &rect, SDL_MapRGB(pScreen->format, 255, 0, 0));
+   }
 
    rect.w -= PIECE_BORDER_SIZE;
    rect.h -= PIECE_BORDER_SIZE;
