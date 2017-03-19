@@ -22,6 +22,10 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
 {
    *ppMenu = malloc(sizeof(struct MainMenu));
    struct MainMenu* pMenu = (*ppMenu);
+
+   pMenu->m_pConfig = pConfig;
+   pMenu->m_pScreen = pScreen;
+
    pMenu->m_eChoice = Play;
    pMenu->m_eSelection = Levels;
    pMenu->m_nLevelNum = nLevelNum >= 1 ? nLevelNum : 1;
@@ -37,9 +41,6 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
 
    //pMenu->m_pBackground = NULL;
    pMenu->m_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 12);
-
-   pMenu->m_pConfig = pConfig;
-   pMenu->m_pScreen = pScreen;
 }
 
 void FreeMainMenu(struct MainMenu** ppMenu)
@@ -128,6 +129,7 @@ int PollEvents(struct MainMenu* pMenu)
 		     }
 		     else {
                         pMenu->m_nCurrentLevel -= 4;
+			pMenu->m_nLevelNum -= 4;
 			UpdateSelectedItems(pMenu);
 		     }
 		  }
@@ -144,6 +146,7 @@ int PollEvents(struct MainMenu* pMenu)
 		  if( pMenu->m_eSelection == Levels ) {
                      if( pMenu->m_nCurrentLevel < 4 ) {
                         pMenu->m_nCurrentLevel += 4;
+			pMenu->m_nLevelNum += 4;
 			UpdateSelectedItems(pMenu);
 		     }
 		     else {
@@ -154,6 +157,8 @@ int PollEvents(struct MainMenu* pMenu)
                   }
 		  else if( pMenu->m_eSelection == Categories ) {
                      pMenu->m_eSelection = Levels;
+		     pMenu->m_nLevelNum = pMenu->m_nCurrentCategory * 8 + 1;
+		     pMenu->m_nCurrentLevel = 0;
                      FreeLevelMenuItems(pMenu);
                      CreateLevelMenuItems(pMenu);
 		     UpdateSelectedItems(pMenu);
@@ -168,6 +173,8 @@ int PollEvents(struct MainMenu* pMenu)
 		  }
 		  else if( pMenu->m_eSelection == Categories ) {
                      pMenu->m_eSelection = Levels;
+		     pMenu->m_nLevelNum = pMenu->m_nCurrentCategory * 8 + 1;
+		     pMenu->m_nCurrentLevel = 0;
                      FreeLevelMenuItems(pMenu);
                      CreateLevelMenuItems(pMenu);
 		     UpdateSelectedItems(pMenu);
@@ -316,10 +323,24 @@ void CreateLevelMenuItems(struct MainMenu* pMenu)
 {
    static char buffer[8];
    static char bufferLevel[2048];
+
    for(unsigned int i=0; i<sizeof(pMenu->m_Levels)/sizeof(pMenu->m_Levels[0]); i++) {
       buffer[0] = i+1 + '0';
       buffer[1] = '\0';
-      CreateMenuItem(&pMenu->m_Levels[i], i, buffer, "8/8", Category);
+
+      int nLevelsBeaten = 0;
+      for(int j=0; j<(int)(sizeof(pMenu->m_ChoiceLevels)/sizeof(pMenu->m_ChoiceLevels[0])); j++) {
+         int nLevel = (i*8) + j;
+         if( GetBeatLevel( pMenu->m_pConfig, nLevel) == 1 )
+            nLevelsBeaten++;
+      }
+   
+      char bufferLevelsBeaten[8];
+      bufferLevelsBeaten[0] = nLevelsBeaten + '0';
+      bufferLevelsBeaten[1] = '/';
+      bufferLevelsBeaten[2] = '8';
+      bufferLevelsBeaten[3] = '\0';
+      CreateMenuItem(&pMenu->m_Levels[i], i, buffer, bufferLevelsBeaten, Category);
    }
    
    for(unsigned int i=0; i<sizeof(pMenu->m_ChoiceLevels)/sizeof(pMenu->m_ChoiceLevels[0]); i++) {
@@ -330,8 +351,6 @@ void CreateLevelMenuItems(struct MainMenu* pMenu)
       
       char bufferDimensions[8];
 
-      int nLevel = pMenu->m_nCurrentCategory*8 + i;
-      printf("Loading level: %d\n", nLevel);
       LevelLoad(bufferLevel, (pMenu->m_nCurrentCategory*8)+i+1);
       CrossLib api;
       CrossLibCreate(&api, bufferLevel);

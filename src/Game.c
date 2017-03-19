@@ -113,10 +113,9 @@ void DrawBoard(struct Game* pGame)
 
 void UpdateGameWon(struct Game* pGame)
 {
-   //if( pGame->m_bWon && pGame->m_nLevelNum > 0 && pGame->m_nLevelNum <= 36 ) {
-   //   int nStars = GetStarCount(pGame);
-   //   SetBeatLevel(pGame->m_pConfig, pGame->m_nLevelNum-1/*To 0-base*/, nStars);
-   //}
+   if( pGame->m_bWon && pGame->m_nLevelNum > 0 && pGame->m_nLevelNum <= 56 ) {
+      SetBeatLevel(pGame->m_pConfig, pGame->m_nLevelNum-1/*To 0-base*/, 1);
+   }
 }
 
 int GamePollEvents(struct Game* pGame)
@@ -152,6 +151,7 @@ int GamePollEvents(struct Game* pGame)
                   ToggleCrossCellValue(pGame->m_Cross, GetCurrentX(pGame->m_pSelector), GetCurrentY(pGame->m_pSelector));
 
 		  pGame->m_bWon = IsCrossGameOver(pGame->m_Cross);
+		  UpdateGameWon(pGame);
                   break;
 
                case SDLK_LSHIFT:

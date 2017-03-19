@@ -7,8 +7,8 @@ void CreateConfig(struct Config** ppConfig)
    *ppConfig = malloc(sizeof(struct Config));
 
    struct Config* pConfig = *ppConfig;
-   for(int nLevel = 0; nLevel<36; nLevel++)
-      pConfig->m_Stars[nLevel] = 0;
+   for(int nLevel = 0; nLevel<(int)(sizeof(pConfig->m_nBeatLevels)/sizeof(pConfig->m_nBeatLevels[0])); nLevel++)
+      pConfig->m_nBeatLevels[nLevel] = 0;
 
    pConfig->m_Archive = NULL;
    ArchiveCreate(&pConfig->m_Archive);
@@ -21,11 +21,11 @@ void CreateConfig(struct Config** ppConfig)
 
       char buffer[8];
 
-      for(int nLevel = 0; nLevel<36; nLevel++) {
+      for(int nLevel = 0; nLevel<(int)(sizeof(pConfig->m_nBeatLevels)/sizeof(pConfig->m_nBeatLevels[0])); nLevel++) {
          sprintf(buffer, "Level%d", nLevel);
 
          if( strcmp(strName, buffer) == 0 ) {
-            pConfig->m_Stars[nLevel] = atoi( GetValue(pConfig->m_Archive, "Settings", i) );
+            pConfig->m_nBeatLevels[nLevel] = atoi( GetValue(pConfig->m_Archive, "Settings", i) );
             break;
          }
       }
@@ -43,8 +43,8 @@ void FreeConfig(struct Config** ppConfig)
    char bufferName[8];
    struct Config* pConfig = *ppConfig;
    ArchiveSetBatchMode(pConfig->m_Archive, ARCHIVE_ENABLE_BATCH);
-   for(int nLevel=0; nLevel<36; nLevel++) {
-      sprintf(buffer, "%d", pConfig->m_Stars[nLevel]);
+   for(int nLevel=0; nLevel<(int)(sizeof(pConfig->m_nBeatLevels)/sizeof(pConfig->m_nBeatLevels[0])); nLevel++) {
+      sprintf(buffer, "%d", pConfig->m_nBeatLevels[nLevel]);
       sprintf(bufferName, "Level%d", nLevel);
       UpdateArchiveEntry(pConfig->m_Archive, "Settings", bufferName, buffer, NULL);
    }
@@ -61,26 +61,21 @@ void FreeConfig(struct Config** ppConfig)
    *ppConfig = NULL;
 }
 
-void SetBeatLevel(struct Config* pConfig, int nLevelNum, int nStars)
+void SetBeatLevel(struct Config* pConfig, int nLevelNum, int nBeat)
 {
-   //printf("Config: Level: %d Stars: %d\n", nLevelNum, nStars);
-   if( nLevelNum < 0 || nLevelNum >= 36 )
+   if( nLevelNum < 0 || nLevelNum >= (int)(sizeof(pConfig->m_nBeatLevels)/sizeof(pConfig->m_nBeatLevels[0])) )
       return;
 
-   if( nStars <= pConfig->m_Stars[nLevelNum] )
-      return;
-
-   pConfig->m_Stars[nLevelNum] = nStars; 
+   pConfig->m_nBeatLevels[nLevelNum] = nBeat; 
 }
 
-void GetBeatLevel(struct Config* pConfig, int nLevelNum, int* pnStars)
+int GetBeatLevel(struct Config* pConfig, int nLevelNum)
 {
-   if( pnStars ) {
-      *pnStars = 0;
-
-      if( nLevelNum >= 0 && nLevelNum <36 )
-         *pnStars = pConfig->m_Stars[nLevelNum];
-   }
+   int nRet = 0;
+   if( nLevelNum >= 0 && nLevelNum <(int)(sizeof(pConfig->m_nBeatLevels)/sizeof(pConfig->m_nBeatLevels[0])) )
+      nRet = pConfig->m_nBeatLevels[nLevelNum];
+   
+   return nRet;
 }
 
 int GetDrawBackground(struct Config* pConfig)

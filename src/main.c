@@ -95,6 +95,7 @@ int main(int argc, char *argv[])
          bShowHelp = MainMenuShowHelp(pMenu);
          if( bShouldQuit == 0 && bShowOptions == 0 && bShowHelp == 0 ) {
             nLevelNumber = MainMenuGetLevelNum(pMenu);
+	    printf("Loading level: %d\n", nLevelNumber);
             LevelLoad(strLevelData, nLevelNumber);
          }
          FreeMainMenu(&pMenu);
