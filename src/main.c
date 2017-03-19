@@ -6,8 +6,8 @@
 #include "Startup.h"
 #include "MainMenu.h"
 #include "Game.h"
-//#include "Options.h"
-//#include "Help.h"
+#include "Options.h"
+#include "Help.h"
 #include "Config.h"
 #include "Levels.h"
 #ifndef _TINSPIRE
@@ -116,17 +116,17 @@ int main(int argc, char *argv[])
       }*/
 
       if( bShowOptions ) {
-         /*struct Options* pOptions = NULL;
-         CreateOptions(&pOptions, pConfig);
+         struct Options* pOptions = NULL;
+         CreateOptions(&pOptions, pConfig, pScreen);
          while(OptionsLoop(pOptions)){}
-         FreeOptions(&pOptions);*/
+         FreeOptions(&pOptions);
          continue;
       }
       else if( bShowHelp ) {
-/*         struct Help* pHelp = NULL;
-         CreateHelp(&pHelp, pConfig);
+         struct Help* pHelp = NULL;
+         CreateHelp(&pHelp, pScreen);
          while(HelpLoop(pHelp)){}
-         FreeHelp(&pHelp);*/
+         FreeHelp(&pHelp);
          continue;
       }
       else {
