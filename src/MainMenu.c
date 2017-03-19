@@ -7,6 +7,7 @@
 #include "Replacements.h"
 //#include "StarDrawer.h"
 //#include "LevelColors.h"
+#include "Levels.h"
 
 #ifndef _TINSPIRE
 #define SCREEN_WIDTH	(320)
@@ -313,7 +314,8 @@ void FreeLevelMenuItems(struct MainMenu* pMenu)
 
 void CreateLevelMenuItems(struct MainMenu* pMenu)
 {
-   static char buffer[8]; 
+   static char buffer[8];
+   static char bufferLevel[2048];
    for(unsigned int i=0; i<sizeof(pMenu->m_Levels)/sizeof(pMenu->m_Levels[0]); i++) {
       buffer[0] = i+1 + '0';
       buffer[1] = '\0';
@@ -325,6 +327,20 @@ void CreateLevelMenuItems(struct MainMenu* pMenu)
       buffer[1] = '-';
       buffer[2] = i+1 + '0';
       buffer[3] = '\0';
-      CreateMenuItem(&pMenu->m_ChoiceLevels[i], i, buffer, "4x4", Level);
+      
+      char bufferDimensions[8];
+
+      int nLevel = pMenu->m_nCurrentCategory*8 + i;
+      printf("Loading level: %d\n", nLevel);
+      LevelLoad(bufferLevel, (pMenu->m_nCurrentCategory*8)+i+1);
+      CrossLib api;
+      CrossLibCreate(&api, bufferLevel);
+      bufferDimensions[0] = GetCrossWidth(api) + '0';
+      bufferDimensions[1]='x';
+      bufferDimensions[2] = GetCrossHeight(api) + '0';
+      bufferDimensions[3] = '\0';
+      CrossLibFree(&api);
+      
+      CreateMenuItem(&pMenu->m_ChoiceLevels[i], i, buffer, bufferDimensions, Level);
    }
 }
