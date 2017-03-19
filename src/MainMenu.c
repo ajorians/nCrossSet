@@ -20,6 +20,14 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
    pMenu->m_eChoice = Play;
    pMenu->m_nLevelNum = nLevelNum >= 1 ? nLevelNum : 1;
 
+   for(unsigned int i=0; i<sizeof(pMenu->m_Levels)/sizeof(pMenu->m_Levels[0]); i++) {
+      CreateMenuItem(&pMenu->m_Levels[i], i, Category);
+   }
+   
+   for(unsigned int i=0; i<sizeof(pMenu->m_ChoiceLevels)/sizeof(pMenu->m_ChoiceLevels[0]); i++) {
+      CreateMenuItem(&pMenu->m_ChoiceLevels[i], i, Level);
+   }
+
    //pMenu->m_pBackground = NULL;
    pMenu->m_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 12);
 
@@ -109,13 +117,19 @@ void draw_rectangle(SDL_Surface* Surface, Uint32 color, Uint16 x, Uint16 y, Uint
 void UpdateDisplay(struct MainMenu* pMenu)
 {
    SDL_Rect DestRect;
-
-   // Draw the top line
    DestRect.x = 0;
    DestRect.y = 0;
    DestRect.w = SCREEN_WIDTH;
    DestRect.h = SCREEN_HEIGHT;
    SDL_FillRect(pMenu->m_pScreen, &DestRect, SDL_MapRGB(pMenu->m_pScreen->format, 255, 255, 255));
+
+   for(unsigned int i=0; i<sizeof(pMenu->m_Levels)/sizeof(pMenu->m_Levels[0]); i++) {
+      MenuItemDraw(&pMenu->m_Levels[i], pMenu->m_pScreen);
+   }
+
+   for(unsigned int i=0; i<sizeof(pMenu->m_ChoiceLevels)/sizeof(pMenu->m_ChoiceLevels[0]); i++) {
+      MenuItemDraw(&pMenu->m_ChoiceLevels[i], pMenu->m_pScreen);
+   }
 
    char buffer[5];
    IntToA(buffer, 5, pMenu->m_nLevelNum);
