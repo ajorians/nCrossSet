@@ -11,6 +11,7 @@
 
 struct Help
 {
+   Font* m_pFont;
    struct SDL_Surface* m_pScreen;//Does not own
 };
 

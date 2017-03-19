@@ -142,6 +142,7 @@ int PollEvents(struct MainMenu* pMenu)
 		  else if( pMenu->m_eSelection == Other )
                   {
                       pMenu->m_eSelection = Levels;
+		      pMenu->m_eChoice = Play;
                       UpdateSelectedItems(pMenu);
                   }
 		  break;

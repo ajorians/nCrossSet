@@ -12,12 +12,13 @@ static Font* g_pFontUsed = NULL;
 #endif
 static Font* g_pFont = NULL;
 
-void CreatePiece(struct Piece* pPiece, int x, int y, CrossLib cross, struct Metrics* pMetrics)
+void CreatePiece(struct Piece* pPiece, int x, int y, CrossLib cross, struct Metrics* pMetrics, struct Config* pConfig)
 {
    pPiece->m_nX = x;
    pPiece->m_nY = y;
    pPiece->m_Cross = cross;
    pPiece->m_pMetrics = pMetrics;
+   pPiece->m_pConfig = pConfig;
 
    if( g_pFont == NULL ) {
 #ifdef USE_DIFFERENT_FONT
@@ -32,6 +33,7 @@ void FreePiece(struct Piece* pPiece)
 {
    pPiece->m_Cross = NULL;//Does not own
    pPiece->m_pMetrics = NULL;//Does not own
+   pPiece->m_pConfig = NULL;//Does not own
 
    if( g_pFont != NULL ) {
 #ifdef USE_DIFFERENT_FONT
@@ -86,7 +88,8 @@ void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen)
       Font* pFont = g_pFont;
       int nR = 127, nG = 127, nB = 127;
 #ifdef USE_DIFFERENT_FONT
-      if( CROSSLIB_HAS_VALUE == IsCrossNumberLockedOnRowColumn( pPiece->m_Cross, pPiece->m_nX, pPiece->m_nY, n ) ) {
+      if( CROSSLIB_HAS_VALUE == IsCrossNumberLockedOnRowColumn( pPiece->m_Cross, pPiece->m_nX, pPiece->m_nY, n )
+          && GetLockHint(pPiece->m_pConfig) == 1 ) {
          pFont = g_pFontUsed;
          nR = 255, nG = 0, nB = 0;
       }
@@ -103,10 +106,6 @@ void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen)
 #else
    int nCharWidth = 8;
 #endif
-
-      if( nCharWidth <= 0 ) {
-	      printf("Less than 0: %d\n", nCharWidth);
-	      }
 
       left += nCharWidth;
    }

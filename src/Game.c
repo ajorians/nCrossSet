@@ -31,20 +31,12 @@ void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, 
    for(int x=0; x<nWidth; x++) {
       for(int y=0; y<nHeight; y++) {
          struct Piece* pPiece = &pGame->m_apPieces[x+y*nWidth];
-         CreatePiece(pPiece, x, y, pGame->m_Cross, pGame->m_pMetrics);
+         CreatePiece(pPiece, x, y, pGame->m_Cross, pGame->m_pMetrics, pConfig);
       }
    }
 
    pGame->m_pSelector = NULL;
    CreateSelector(&pGame->m_pSelector, pGame->m_pScreen, pGame->m_pConfig, pGame->m_pMetrics, pGame->m_Cross);
-
-   /*pGame->m_pIndicators = NULL;
-   CreateIndicators(&pGame->m_pIndicators, pGame->m_Square, pGame->m_pMetrics);
-
-   pGame->m_pBackground = NULL;
-
-   pGame->m_pStarDrawer = NULL;
-   CreateStarDrawer(&pGame->m_pStarDrawer);*/
 
    pGame->m_bShouldQuit = 0;
 }
@@ -64,10 +56,8 @@ void FreeGame(struct Game** ppGame)
    free(pGame->m_apPieces);
 
    FreeSelector(&pGame->m_pSelector);
-   //FreeIndicators(&pGame->m_pIndicators);
    FreeBackground(&pGame->m_pBackground);
    FreeMetrics(&pGame->m_pMetrics);
-   //FreeStarDrawer(&pGame->m_pStarDrawer);
 
    pGame->m_pConfig = NULL;//Does not own
    pGame->m_pScreen = NULL;//Does not own
@@ -82,21 +72,6 @@ void DrawBoard(struct Game* pGame)
 
    int nWidth = GetCrossWidth(pGame->m_Cross);
    int nHeight = GetCrossHeight(pGame->m_Cross);
-
-   //Draw outlines
-#if 0
-   gui_gc_setColorRGB(gc, 0, 0, 0);
-   for(int x=0; x<=nWidth; x++) {
-      gui_gc_drawLine(gc, nLeftBoard + x*nPieceDim, nTopBoard, nLeftBoard + x*nPieceDim, nTopBoard + nHeight*nPieceDim);
-   }
-
-   for(int y=0; y<=nHeight; y++) {
-      gui_gc_drawLine(gc, nLeftBoard, nTopBoard + y*nPieceDim, nLeftBoard + nWidth*nPieceDim, nTopBoard + y*nPieceDim);
-   }
-#endif
-
-   //Draw indicators
-   //IndicatorsDraw(pGame->m_pIndicators, &pGame->m_gc);
 
    //Draw pieces
    for(int x=0; x<nWidth; x++) {

@@ -11,6 +11,7 @@
 
 struct Options
 {
+   Font* m_pFont;
    struct Config* m_pConfig;//Does not own
    struct SDL_Surface* m_pScreen;//Does not own
 };

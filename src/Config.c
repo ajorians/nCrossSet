@@ -34,6 +34,11 @@ void CreateConfig(struct Config** ppConfig)
       if( strcmp(strName, buffer) == 0 ) {
          pConfig->m_nDrawBackground = atoi( GetValue(pConfig->m_Archive, "Settings", i) );
       }
+
+      sprintf(buffer, "LockHint");
+      if( strcmp(strName, buffer) == 0 ) {
+         pConfig->m_nLockHint = atoi( GetValue(pConfig->m_Archive, "Settings", i) );
+      }
    }
 }
 
@@ -51,6 +56,10 @@ void FreeConfig(struct Config** ppConfig)
 
    sprintf(buffer, "%d", pConfig->m_nDrawBackground);
    sprintf(bufferName, "DrawBkg", pConfig->m_nDrawBackground);
+   UpdateArchiveEntry(pConfig->m_Archive, "Settings", bufferName, buffer, NULL);
+
+   sprintf(buffer, "%d", pConfig->m_nLockHint);
+   strcpy(bufferName, "LockHint");
    UpdateArchiveEntry(pConfig->m_Archive, "Settings", bufferName, buffer, NULL);
 
    ArchiveSetBatchMode(pConfig->m_Archive, ARCHIVE_DISABLE_BATCH);
@@ -86,5 +95,15 @@ int GetDrawBackground(struct Config* pConfig)
 void SetDrawBackground(struct Config* pConfig, int nOn)
 {
    pConfig->m_nDrawBackground = nOn;
+}
+
+int GetLockHint(struct Config* pConfig)
+{
+   return pConfig->m_nLockHint;
+}
+
+void SetLockHint(struct Config* pConfig, int nOn)
+{
+   pConfig->m_nLockHint = nOn;
 }
 #endif
