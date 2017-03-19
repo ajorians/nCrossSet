@@ -34,6 +34,8 @@ struct MainMenu
    int m_nLevelNum;
    struct MenuItem m_Levels[7];
    struct MenuItem m_ChoiceLevels[8];
+   struct MenuItem m_Options;
+   struct MenuItem m_Help;
    int m_nCurrentCategory;
    int m_nCurrentLevel;
    //struct Background* m_pBackground;

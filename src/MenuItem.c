@@ -6,39 +6,27 @@
 
 #define USE_DIFFERENT_FONT
 
-#ifdef USE_DIFFERENT_FONT
-static Font* g_pFontBig = NULL;
-static Font* g_pFontUsed = NULL;
-#endif
-static Font* g_pFont = NULL;
+static Font* g_pFontMenuItem = NULL;
 
-void CreateMenuItem(struct MenuItem* pMenuItem, int x, enum MenuItemType eMenuType)
+void CreateMenuItem(struct MenuItem* pMenuItem, int x, char* pstrText, char* pstrSubText, enum MenuItemType eMenuType)
 {
    pMenuItem->m_nX = x;
+   strcpy(pMenuItem->m_Text, pstrText);
+   strcpy(pMenuItem->m_SubText, pstrSubText);
    pMenuItem->m_eMenuType = eMenuType;
    pMenuItem->m_nSelected = 0;
 
-   if( g_pFont == NULL ) {
-#ifdef USE_DIFFERENT_FONT
-      g_pFontBig = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 255/*R*/, 255/*G*/, 255/*B*/, 12);
-      g_pFontUsed = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 12);
-#endif
-      g_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 127/*R*/, 127/*G*/, 127/*B*/, 12);
+   if( g_pFontMenuItem == NULL ) {
+      g_pFontMenuItem = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 127/*R*/, 127/*G*/, 127/*B*/, 12);
    }
 }
 
 void FreeMenuItem(struct MenuItem* pMenuItem)
 {
-   if( g_pFont != NULL ) {
-#ifdef USE_DIFFERENT_FONT
-      FreeFont(g_pFontBig);
-      g_pFontBig = NULL;
-      FreeFont(g_pFontUsed);
-      g_pFontUsed = NULL;
-#endif
+   if( g_pFontMenuItem != NULL ) {
 
-      FreeFont(g_pFont);
-      g_pFont = NULL;
+      FreeFont(g_pFontMenuItem);
+      g_pFontMenuItem = NULL;
    }
 }
 
@@ -50,9 +38,9 @@ void SetMenuItemSelected(struct MenuItem* pMenuItem, int nSelected)
 void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen)
 {
    SDL_Rect rect;
-   rect.w = 43;
 
    if( pMenuItem->m_eMenuType == Category ) {
+      rect.w = 43;
       rect.h = 50;
       int nNumLevels = 7;
       int nRemainder = SCREEN_WIDTH - (nNumLevels*rect.w);
@@ -60,7 +48,8 @@ void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen)
       rect.x = nSlice*(pMenuItem->m_nX+1) + rect.w*(pMenuItem->m_nX);
       rect.y = 30;
    }
-   else {
+   else if( pMenuItem->m_eMenuType == Level ) {
+      rect.w = 43;
       rect.h = 40;
       int nNumPerRow = 4;
       int nRemainder = SCREEN_WIDTH - (nNumPerRow*rect.w);
@@ -69,6 +58,15 @@ void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen)
       int nY = pMenuItem->m_nX > 3 ? 150 : 100;
       rect.x = nSlice*(nSpot+1) + rect.w*(nSpot);
       rect.y = nY;
+   }
+   else {
+      rect.w = 80;
+      rect.h = 25;
+      int nNumPerRow = 2;
+      int nRemainder = SCREEN_WIDTH - (nNumPerRow*rect.w);
+      int nSlice = nRemainder / (nNumPerRow+1);
+      rect.x = nSlice*(pMenuItem->m_nX+1) + rect.w*(pMenuItem->m_nX);
+      rect.y = 200;
    }
 
    if( pMenuItem->m_nSelected == 0 ) {
@@ -86,36 +84,34 @@ void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen)
 
    if( pMenuItem->m_eMenuType == Category ) {
       SDL_FillRect(pScreen, &rect, SDL_MapRGB(pScreen->format, 0, 0, 255));
-   } else {
+   } else if( pMenuItem->m_eMenuType == Level ) {
       SDL_FillRect(pScreen, &rect, SDL_MapRGB(pScreen->format, 0, 255, 0));
+   } else {
+      SDL_FillRect(pScreen, &rect, SDL_MapRGB(pScreen->format, 255, 255, 0));
    }
 
    rect.h -= 10;
    if( pMenuItem->m_eMenuType == Category ) {
       SDL_FillRect(pScreen, &rect, SDL_MapRGB(pScreen->format, 0, 0, 200));
-   } else {
+   } else if( pMenuItem->m_eMenuType == Level ) {
       SDL_FillRect(pScreen, &rect, SDL_MapRGB(pScreen->format, 0, 200, 0));
    }
 
-   static char buffer[8];
-
-   Font* pFont = g_pFont;
+   Font* pFont = g_pFontMenuItem;
    if( pMenuItem->m_eMenuType == Category ) {
       DrawText(pScreen, pFont, rect.x + 2, rect.y+3, "Level", 255, 255, 255);
 
-     buffer[0] = (pMenuItem->m_nX+1) + '0';
-     buffer[1] = '\0';
-     DrawText(pScreen, pFont, rect.x+14, rect.y+20, buffer, 255, 255, 255);
+     DrawText(pScreen, pFont, rect.x+14, rect.y+20, pMenuItem->m_Text, 255, 255, 255);
+   } else if( pMenuItem->m_eMenuType == Level ) {
+      DrawText(pScreen, pFont, rect.x + 7, rect.y+8, pMenuItem->m_Text, 255, 255, 255);
    } else {
-      DrawText(pScreen, pFont, rect.x + 7, rect.y+8, "1-1", 255, 255, 255);
+      DrawText(pScreen, pFont, rect.x + 7, rect.y+8, pMenuItem->m_Text, 255, 255, 255);
    }
 
    if( pMenuItem->m_eMenuType == Category ) {
-      strcpy(buffer, "8/8");
-      DrawText(pScreen, pFont, rect.x+7, rect.y+rect.h, buffer, 255, 255, 255);
-   } else {
-      strcpy(buffer, "4x4");
-      DrawText(pScreen, pFont, rect.x+7, rect.y+rect.h, buffer, 255, 255, 255);
+      DrawText(pScreen, pFont, rect.x+7, rect.y+rect.h, pMenuItem->m_SubText, 255, 255, 255);
+   } else if( pMenuItem->m_eMenuType == Level ) {
+      DrawText(pScreen, pFont, rect.x+7, rect.y+rect.h, pMenuItem->m_SubText, 255, 255, 255);
    }
 }
 
