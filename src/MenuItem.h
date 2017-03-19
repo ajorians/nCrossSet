@@ -6,7 +6,7 @@
 #endif
 #include "SDL/SDL.h"
 #include <CrossLib/CrossLib.h>
-#include "Metrics.h"
+#include "StarDrawer.h"
 
 enum MenuItemType
 {
@@ -27,7 +27,7 @@ struct MenuItem
 void CreateMenuItem(struct MenuItem* pMenuItem, int x, char* pstrText, char* pstrSubText, enum MenuItemType eMenuType);
 void FreeMenuItem(struct MenuItem* pMenuItem);
 void SetMenuItemSelected(struct MenuItem* pMenuItem, int nSelected);
-void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen);
+void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen, struct StarDrawer* pStarDrawer);
 
 #endif
 

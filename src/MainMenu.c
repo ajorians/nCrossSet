@@ -41,6 +41,8 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
 
    //pMenu->m_pBackground = NULL;
    pMenu->m_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 12);
+
+   CreateStarDrawer( &pMenu->m_pStarDrawer );
 }
 
 void FreeMainMenu(struct MainMenu** ppMenu)
@@ -54,6 +56,8 @@ void FreeMainMenu(struct MainMenu** ppMenu)
    
    //FreeBackground(&pMenu->m_pBackground);
    FreeFont(pMenu->m_pFont);
+
+   FreeStarDrawer( &pMenu->m_pStarDrawer );
 
    pMenu->m_pConfig = NULL;//Does not own
    pMenu->m_pScreen = NULL;//Does not own
@@ -193,32 +197,6 @@ int PollEvents(struct MainMenu* pMenu)
    return 1;
 }
 
-void draw_rectangle(SDL_Surface* Surface, Uint32 color, Uint16 x, Uint16 y, Uint16 width, Uint16 height, Uint8 lnpx )
-{
-   SDL_Rect DestRect;
-
-   // Draw the top line
-   DestRect.x = x;
-   DestRect.y = y;
-   DestRect.w = width;
-   DestRect.h = 1;
-   SDL_FillRect (Surface, &DestRect, color);
-
-   // Draw the bottum line
-   DestRect.y = y+height-1;
-   SDL_FillRect (Surface, &DestRect, color);
-
-   // Draw the left line
-   DestRect.y = y;
-   DestRect.w = 1;
-   DestRect.h = height;
-   SDL_FillRect (Surface, &DestRect, color);
-
-   // Draw the left line
-   DestRect.x = x+width-1;
-   SDL_FillRect (Surface, &DestRect, color);
-}
-
 void UpdateDisplay(struct MainMenu* pMenu)
 {
    SDL_Rect DestRect;
@@ -229,29 +207,20 @@ void UpdateDisplay(struct MainMenu* pMenu)
    SDL_FillRect(pMenu->m_pScreen, &DestRect, SDL_MapRGB(pMenu->m_pScreen->format, 255, 255, 255));
 
    for(unsigned int i=0; i<sizeof(pMenu->m_Levels)/sizeof(pMenu->m_Levels[0]); i++) {
-      MenuItemDraw(&pMenu->m_Levels[i], pMenu->m_pScreen);
+      MenuItemDraw(&pMenu->m_Levels[i], pMenu->m_pScreen, NULL);
    }
 
    if( pMenu->m_eSelection != Categories ) {
       for(unsigned int i=0; i<sizeof(pMenu->m_ChoiceLevels)/sizeof(pMenu->m_ChoiceLevels[0]); i++) {
-         MenuItemDraw(&pMenu->m_ChoiceLevels[i], pMenu->m_pScreen);
+         int nLevel = (pMenu->m_nCurrentCategory*8)+i;
+	 int nBeatLevel = GetBeatLevel(pMenu->m_pConfig, nLevel);
+         MenuItemDraw(&pMenu->m_ChoiceLevels[i], pMenu->m_pScreen, nBeatLevel == 1 ? pMenu->m_pStarDrawer : NULL );
       }
    }
 
-   MenuItemDraw(&pMenu->m_Options, pMenu->m_pScreen);
-   MenuItemDraw(&pMenu->m_Help, pMenu->m_pScreen);
+   MenuItemDraw(&pMenu->m_Options, pMenu->m_pScreen, NULL);
+   MenuItemDraw(&pMenu->m_Help, pMenu->m_pScreen, NULL);
 
-   /*char buffer[5];
-   IntToA(buffer, 5, pMenu->m_nLevelNum);
-   DrawText(pMenu->m_pScreen, pMenu->m_pFont, 50, 50, buffer, 0, 0, 0);
-
-   if( pMenu->m_eChoice == Play )
-      draw_rectangle(pMenu->m_pScreen, SDL_MapRGB(pMenu->m_pScreen->format, 255, 0, 0), 160, 145, 95, 26, 1);
-   //else if( m_eChoice == HighScore )
-      //draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 160, 172, 106, 24, 1);
-   else if( pMenu->m_eChoice == Help )
-      draw_rectangle(pMenu->m_pScreen, SDL_MapRGB(pMenu->m_pScreen->format, 255, 0, 0), 160, 199, 52, 25, 1);
-*/
    SDL_UpdateRect(pMenu->m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 

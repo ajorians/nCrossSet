@@ -9,6 +9,7 @@
 #include "Config.h"
 #include "MenuItem.h"
 #include "Font.h"
+#include "StarDrawer.h"
 
 //#define SHOW_LEVEL_DIMENSIONS
 
@@ -40,6 +41,7 @@ struct MainMenu
    int m_nCurrentLevel;
    //struct Background* m_pBackground;
    Font *m_pFont;
+   struct StarDrawer* m_pStarDrawer;
    struct Config* m_pConfig;//Does not own
    struct SDL_Surface* m_pScreen;//Does not own
 };

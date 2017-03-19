@@ -35,7 +35,7 @@ void SetMenuItemSelected(struct MenuItem* pMenuItem, int nSelected)
    pMenuItem->m_nSelected = nSelected;
 }
 
-void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen)
+void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen, struct StarDrawer* pStarDrawer)
 {
    SDL_Rect rect;
 
@@ -111,6 +111,8 @@ void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen)
    if( pMenuItem->m_eMenuType == Category ) {
       DrawText(pScreen, pFont, rect.x+7, rect.y+rect.h, pMenuItem->m_SubText, 255, 255, 255);
    } else if( pMenuItem->m_eMenuType == Level ) {
+      if( pStarDrawer != NULL )
+         DrawStar(pStarDrawer, pScreen, rect.x-10, rect.y+rect.h/2-2);
       DrawText(pScreen, pFont, rect.x+7, rect.y+rect.h, pMenuItem->m_SubText, 255, 255, 255);
    }
 }
