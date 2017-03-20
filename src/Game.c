@@ -3,7 +3,7 @@
 #include <libndls.h>
 #endif
 #include "Game.h"
-//#include "Indicators.h"
+#include "YouWinGraphic.h"
 
 #ifndef _TINSPIRE
 #define SCREEN_WIDTH	(320)
@@ -18,6 +18,9 @@ void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, 
    pGame->m_nLevelNum = nLevelNum;
    pGame->m_pConfig = pConfig;
    pGame->m_bWon = IsCrossGameOver(pGame->m_Cross);
+   
+   pGame->m_pYouWinGraphic = nSDL_LoadImage(image_YouWin);
+   SDL_SetColorKey(pGame->m_pYouWinGraphic, SDL_SRCCOLORKEY, SDL_MapRGB(pGame->m_pYouWinGraphic->format, 255, 255, 255));
 
    pGame->m_pScreen = pScreen;
    CreateBackground(&(pGame->m_pBackground), pGame->m_pScreen, pGame->m_pConfig);
@@ -55,6 +58,7 @@ void FreeGame(struct Game** ppGame)
    }
    free(pGame->m_apPieces);
 
+   SDL_FreeSurface(pGame->m_pYouWinGraphic);
    FreeSelector(&pGame->m_pSelector);
    FreeBackground(&pGame->m_pBackground);
    FreeMetrics(&pGame->m_pMetrics);
@@ -83,6 +87,16 @@ void DrawBoard(struct Game* pGame)
 
    //Draw selector
    DrawSelector(pGame->m_pSelector);
+   
+   if( pGame->m_bWon == 1 ) {
+      SDL_Rect rectYouWin;
+      rectYouWin.x = (SCREEN_WIDTH - pGame->m_pYouWinGraphic->w)/2;
+      rectYouWin.y = (SCREEN_HEIGHT - pGame->m_pYouWinGraphic->h)/2;
+      rectYouWin.w = pGame->m_pYouWinGraphic->w;
+      rectYouWin.h = pGame->m_pYouWinGraphic->h;
+      SDL_BlitSurface(pGame->m_pYouWinGraphic, NULL, pGame->m_pScreen, &rectYouWin);
+   }
+   
    SDL_UpdateRect(pGame->m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
@@ -105,37 +119,51 @@ int GamePollEvents(struct Game* pGame)
                   break;
 
                case SDLK_UP:
-                  Move(pGame->m_pSelector, Up);
+		  if( pGame->m_bWon != 1 ) {
+                     Move(pGame->m_pSelector, Up);
+		  }
                   break;
 
 	       case SDLK_DOWN:
-                  Move(pGame->m_pSelector, Down);
+		  if( pGame->m_bWon != 1 ) {
+                     Move(pGame->m_pSelector, Down);
+		  }
                   break;
 
                case SDLK_LEFT:
-                  Move(pGame->m_pSelector, Left);
+		  if( pGame->m_bWon != 1 ) {
+                     Move(pGame->m_pSelector, Left);
+		  }
                   break;
 
                case SDLK_RIGHT:
-                  Move(pGame->m_pSelector, Right);
+		  if( pGame->m_bWon != 1 ) {
+                     Move(pGame->m_pSelector, Right);
+		  }
                   break;
 
                case SDLK_RETURN:
                case SDLK_LCTRL:
                case SDLK_RCTRL:
-                  ToggleCrossCellValue(pGame->m_Cross, GetCurrentX(pGame->m_pSelector), GetCurrentY(pGame->m_pSelector));
+		  if( pGame->m_bWon != 1 ) {
+                     ToggleCrossCellValue(pGame->m_Cross, GetCurrentX(pGame->m_pSelector), GetCurrentY(pGame->m_pSelector));
 
-		  pGame->m_bWon = IsCrossGameOver(pGame->m_Cross);
-		  UpdateGameWon(pGame);
+		     pGame->m_bWon = IsCrossGameOver(pGame->m_Cross);
+		     UpdateGameWon(pGame);
+		  }
                   break;
 
                case SDLK_LSHIFT:
                case SDLK_RSHIFT:
-                  ToggleCrossCellMarking(pGame->m_Cross, GetCurrentX(pGame->m_pSelector), GetCurrentY(pGame->m_pSelector));
+		  if( pGame->m_bWon != 1 ) {
+                     ToggleCrossCellMarking(pGame->m_Cross, GetCurrentX(pGame->m_pSelector), GetCurrentY(pGame->m_pSelector));
+		  }
                   break;
 
                case SDLK_a:
-                  CrossDoSolveStep(pGame->m_Cross);
+		  if( pGame->m_bWon != 1 ) {
+                     CrossDoSolveStep(pGame->m_Cross);
+		  }
                   break;
 
                default:
@@ -157,7 +185,7 @@ int GameLoop(struct Game* pGame)
 
    SDL_Delay(30);
 
-   return pGame->m_bWon != CROSSLIB_GAMEOVER;
+   return 1;//pGame->m_bWon != CROSSLIB_GAMEOVER;
 }
 
 int GameShouldQuit(struct Game* pGame)

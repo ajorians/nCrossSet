@@ -4,12 +4,10 @@
 #include <CrossLib/CrossLib.h>
 #include <SDL/SDL.h>
 #include "Background.h"
-//#include "StarDrawer.h"
 #include "Config.h"
 #include "Metrics.h"
 #include "Piece.h"
 #include "Selector.h"
-//struct Indicators;
 
 struct Game
 {
@@ -20,11 +18,10 @@ struct Game
    struct Metrics* m_pMetrics;
    struct Piece* m_apPieces;
    struct Selector* m_pSelector;
-   //struct Indicators* m_pIndicators;
    int m_bShouldQuit;
+   struct SDL_Surface* m_pYouWinGraphic;
    struct SDL_Surface* m_pScreen;//Does not own
    struct Background* m_pBackground;
-   //struct StarDrawer* m_pStarDrawer;
 };
 
 void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, struct Config* pConfig, struct SDL_Surface* pScreen);
