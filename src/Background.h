@@ -11,8 +11,9 @@ struct Background
 {
    struct SDL_Surface* m_pScreen;//Does not own
    struct Config*      m_pConfig;//Does not own
-   struct SDL_Surface* m_pBackground;
    int m_nX;
+   int* m_nArr;
+   int m_nNumSquares;
 };
 
 void CreateBackground(struct Background** ppBackground, struct SDL_Surface* pScreen, struct Config* pConfig);

@@ -73,7 +73,7 @@ void FreeGame(struct Game** ppGame)
 void DrawBoard(struct Game* pGame)
 {
    DrawBackground(pGame->m_pBackground);
-
+#if 1
    int nWidth = GetCrossWidth(pGame->m_Cross);
    int nHeight = GetCrossHeight(pGame->m_Cross);
 
@@ -96,6 +96,7 @@ void DrawBoard(struct Game* pGame)
       rectYouWin.h = pGame->m_pYouWinGraphic->h;
       SDL_BlitSurface(pGame->m_pYouWinGraphic, NULL, pGame->m_pScreen, &rectYouWin);
    }
+#endif
    
    SDL_UpdateRect(pGame->m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }

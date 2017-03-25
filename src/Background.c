@@ -1,62 +1,71 @@
 #include "Background.h"
-#include "GameBackgroundWide.h"
 
-#define GRAPHIC_WIDTH	(384)
-
+const int g_nSquaresAcross = 10;
+const int g_nSquaresPerColumn = 10;
 void CreateBackground(struct Background** ppBackground, struct SDL_Surface* pScreen, struct Config* pConfig) {
    *ppBackground = malloc(sizeof(struct Background));
    struct Background* pBackground = *ppBackground;
    pBackground->m_pScreen = pScreen;
    pBackground->m_pConfig = pConfig;
-#ifdef _TINSPIRE
-   pBackground->m_pBackground = nSDL_LoadImage(image_BackGroundWide);
-#endif
    pBackground->m_nX = 0;
+
+   pBackground->m_nNumSquares = (g_nSquaresAcross * g_nSquaresPerColumn) + g_nSquaresPerColumn;
+   pBackground->m_nArr = malloc(pBackground->m_nNumSquares * sizeof(int));
+
+   for( int i=0; i<pBackground->m_nNumSquares; i++ ) {
+      int r = rand() % 255;
+      int g = rand() % 255;
+      int b = rand() % 255;
+      pBackground->m_nArr[i] = ((r<<16)&0xFF0000) | ((g<<8)&0x00FF00) | b;
+   }
 }
 
 void FreeBackground(struct Background** ppBackground) {
   struct Background* pBackground = *ppBackground;
   pBackground->m_pScreen = NULL;//Does not own
   pBackground->m_pConfig = NULL;//Does not own
-#ifdef _TINSPIRE
-  SDL_FreeSurface(pBackground->m_pBackground);
-  pBackground->m_pBackground = NULL;
-#endif
+
+  free(pBackground->m_nArr);
 
   free(pBackground);
 }
 
 void DrawBackground(struct Background* pBackground) {
-#ifdef _TINSPIRE
-   if( !is_classic ) {
-       SDL_Rect rectSrc, rectDst, rectDst2;
-       rectSrc.w = GRAPHIC_WIDTH;
-       rectSrc.h = 240;
-       rectSrc.x = 0;
-       rectSrc.y = 0;
+   int nSquaresWide = SCREEN_WIDTH / g_nSquaresAcross;
+   int nSquaresTall = SCREEN_HEIGHT / g_nSquaresPerColumn;
 
-       rectDst.w = GRAPHIC_WIDTH;
-       rectDst.h = 240;
-       rectDst.x = pBackground->m_nX;
-       rectDst.y = 0;
+   for(int i=0; i<pBackground->m_nNumSquares; i++) {
+      int nCol = i / g_nSquaresPerColumn;
+      int nRow = i % g_nSquaresPerColumn;
 
-       rectDst2.w = GRAPHIC_WIDTH;
-       rectDst2.h = 240;
-       rectDst2.x = GRAPHIC_WIDTH + pBackground->m_nX;
-       rectDst2.y = 0;
+      SDL_Rect rectDst;
+      rectDst.w = nSquaresWide;
+      rectDst.h = nSquaresTall;
+      rectDst.x = pBackground->m_nX + (nCol * nSquaresWide);
+      rectDst.y = ( nRow * nSquaresTall );
 
-       SDL_BlitSurface(pBackground->m_pBackground, &rectSrc, pBackground->m_pScreen, &rectDst);
-       SDL_BlitSurface(pBackground->m_pBackground, &rectSrc, pBackground->m_pScreen, &rectDst2);
+      int clr = pBackground->m_nArr[i];
+      int r = (clr >> 16) & 0x0000FF;
+      int g = (clr >> 8) & 0x0000FF;
+      int b = (clr & 0x0000FF);
 
-       if( 1 ) {//pBackground->m_pConfig->GetBackgroundMoves() ) {
-          pBackground->m_nX--;
-          if( (pBackground->m_nX + GRAPHIC_WIDTH) <= 0 )
-             pBackground->m_nX = 0;
-       }
-   } else {
-       SDL_FillRect(pBackground->m_pScreen, NULL, SDL_MapRGB(pBackground->m_pScreen->format, 255, 255, 255));
+      SDL_FillRect(pBackground->m_pScreen, &rectDst, SDL_MapRGB(pBackground->m_pScreen->format, r, g, b));
    }
-#endif
+
+   pBackground->m_nX = pBackground->m_nX-1;
+   if( pBackground->m_nX <= (-nSquaresWide) ) {
+      pBackground->m_nX = 0;
+
+      for(int i=g_nSquaresPerColumn; i<pBackground->m_nNumSquares; i++)
+         pBackground->m_nArr[i-g_nSquaresPerColumn] = pBackground->m_nArr[i];
+
+      for(int i=(pBackground->m_nNumSquares-g_nSquaresPerColumn); i<pBackground->m_nNumSquares; i++) {
+         int r = rand() % 255;
+	 int g = rand() % 255;
+	 int b = rand() % 255;
+         pBackground->m_nArr[i] = ((r<<16)&0xFF0000) | ((g<<8)&0x00FF00) | b;
+      }
+   }
 }
 
  
