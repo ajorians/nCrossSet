@@ -23,7 +23,7 @@ void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, 
    SDL_SetColorKey(pGame->m_pYouWinGraphic, SDL_SRCCOLORKEY, SDL_MapRGB(pGame->m_pYouWinGraphic->format, 255, 255, 255));
 
    pGame->m_pScreen = pScreen;
-   CreateBackground(&(pGame->m_pBackground), pGame->m_pScreen, pGame->m_pConfig);
+   CreateBackground(&(pGame->m_pBackground), pGame->m_pScreen, pGame->m_pConfig, 1);
    pGame->m_pMetrics = NULL;
    CreateMetrics(&pGame->m_pMetrics, pGame->m_Cross);
 

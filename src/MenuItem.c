@@ -46,7 +46,7 @@ void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen, struc
       int nRemainder = SCREEN_WIDTH - (nNumLevels*rect.w);
       int nSlice = nRemainder / (nNumLevels+1);
       rect.x = nSlice*(pMenuItem->m_nX+1) + rect.w*(pMenuItem->m_nX);
-      rect.y = 30;
+      rect.y = 53;
    }
    else if( pMenuItem->m_eMenuType == Level ) {
       rect.w = 43;
@@ -55,7 +55,7 @@ void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen, struc
       int nRemainder = SCREEN_WIDTH - (nNumPerRow*rect.w);
       int nSlice = nRemainder / (nNumPerRow+1);
       int nSpot = pMenuItem->m_nX > 3 ? pMenuItem->m_nX - 4 : pMenuItem->m_nX;
-      int nY = pMenuItem->m_nX > 3 ? 150 : 100;
+      int nY = pMenuItem->m_nX > 3 ? 165 : 115;
       rect.x = nSlice*(nSpot+1) + rect.w*(nSpot);
       rect.y = nY;
    }
@@ -66,7 +66,7 @@ void MenuItemDraw(struct MenuItem* pMenuItem, struct SDL_Surface* pScreen, struc
       int nRemainder = SCREEN_WIDTH - (nNumPerRow*rect.w);
       int nSlice = nRemainder / (nNumPerRow+1);
       rect.x = nSlice*(pMenuItem->m_nX+1) + rect.w*(pMenuItem->m_nX);
-      rect.y = 200;
+      rect.y = 212;
    }
 
    if( pMenuItem->m_nSelected == 0 ) {

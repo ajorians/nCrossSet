@@ -6,8 +6,8 @@
 #include "MainMenu.h"
 #include "Replacements.h"
 //#include "StarDrawer.h"
-//#include "LevelColors.h"
 #include "Levels.h"
+#include "MenuGraphic.h"
 
 #ifndef _TINSPIRE
 #define SCREEN_WIDTH	(320)
@@ -39,10 +39,14 @@ void CreateMainMenu(struct MainMenu** ppMenu, int nLevelNum, struct Config* pCon
 
    UpdateSelectedItems(pMenu);
 
-   //pMenu->m_pBackground = NULL;
+   CreateBackground(&(pMenu->m_pBackground), pMenu->m_pScreen, pMenu->m_pConfig, 0);
    pMenu->m_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 12);
 
    CreateStarDrawer( &pMenu->m_pStarDrawer );
+
+#ifdef _TINSPIRE
+   pMenu->m_pTitle = nSDL_LoadImage(image_Title);
+#endif
 }
 
 void FreeMainMenu(struct MainMenu** ppMenu)
@@ -54,13 +58,18 @@ void FreeMainMenu(struct MainMenu** ppMenu)
    FreeMenuItem(&pMenu->m_Options);
    FreeMenuItem(&pMenu->m_Help);
    
-   //FreeBackground(&pMenu->m_pBackground);
+   FreeBackground(&pMenu->m_pBackground);
    FreeFont(pMenu->m_pFont);
 
    FreeStarDrawer( &pMenu->m_pStarDrawer );
 
    pMenu->m_pConfig = NULL;//Does not own
    pMenu->m_pScreen = NULL;//Does not own
+
+#ifdef _TINSPIRE
+   SDL_FreeSurface(pMenu->m_pTitle);
+   pMenu->m_pTitle = NULL;
+#endif
 
    free(*ppMenu);
    *ppMenu = NULL;
@@ -200,12 +209,32 @@ int PollEvents(struct MainMenu* pMenu)
 
 void UpdateDisplay(struct MainMenu* pMenu)
 {
+   DrawBackground(pMenu->m_pBackground);
+
+#if 0
    SDL_Rect DestRect;
    DestRect.x = 0;
    DestRect.y = 0;
    DestRect.w = SCREEN_WIDTH;
    DestRect.h = SCREEN_HEIGHT;
    SDL_FillRect(pMenu->m_pScreen, &DestRect, SDL_MapRGB(pMenu->m_pScreen->format, 255, 255, 255));
+#endif
+
+#ifdef _TINSPIRE
+   SDL_Rect rectSrc, rectDst;
+
+   rectSrc.w = 320;
+   rectSrc.h = 240;
+   rectSrc.x = 0;
+   rectSrc.y = 0;
+
+   rectDst.w = 320;
+   rectDst.h = 240;
+   rectDst.x = 0;
+   rectDst.y = 0;
+
+   SDL_BlitSurface(pMenu->m_pTitle, &rectSrc, pMenu->m_pScreen, &rectDst);
+#endif
 
    for(unsigned int i=0; i<sizeof(pMenu->m_Levels)/sizeof(pMenu->m_Levels[0]); i++) {
       MenuItemDraw(&pMenu->m_Levels[i], pMenu->m_pScreen, NULL);

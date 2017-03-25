@@ -2,7 +2,7 @@
 
 const int g_nSquaresAcross = 10;
 const int g_nSquaresPerColumn = 10;
-void CreateBackground(struct Background** ppBackground, struct SDL_Surface* pScreen, struct Config* pConfig) {
+void CreateBackground(struct Background** ppBackground, struct SDL_Surface* pScreen, struct Config* pConfig, int nAllowMovement) {
    *ppBackground = malloc(sizeof(struct Background));
    struct Background* pBackground = *ppBackground;
    pBackground->m_pScreen = pScreen;
@@ -18,6 +18,8 @@ void CreateBackground(struct Background** ppBackground, struct SDL_Surface* pScr
       int b = rand() % 255;
       pBackground->m_nArr[i] = ((r<<16)&0xFF0000) | ((g<<8)&0x00FF00) | b;
    }
+
+   pBackground->m_nAllowMovement = nAllowMovement;
 }
 
 void FreeBackground(struct Background** ppBackground) {
@@ -52,18 +54,20 @@ void DrawBackground(struct Background* pBackground) {
       SDL_FillRect(pBackground->m_pScreen, &rectDst, SDL_MapRGB(pBackground->m_pScreen->format, r, g, b));
    }
 
-   pBackground->m_nX = pBackground->m_nX-1;
-   if( pBackground->m_nX <= (-nSquaresWide) ) {
-      pBackground->m_nX = 0;
+   if( pBackground->m_nAllowMovement == 1 ) {
+      pBackground->m_nX = pBackground->m_nX-1;
+      if( pBackground->m_nX <= (-nSquaresWide) ) {
+         pBackground->m_nX = 0;
 
-      for(int i=g_nSquaresPerColumn; i<pBackground->m_nNumSquares; i++)
-         pBackground->m_nArr[i-g_nSquaresPerColumn] = pBackground->m_nArr[i];
+         for(int i=g_nSquaresPerColumn; i<pBackground->m_nNumSquares; i++)
+            pBackground->m_nArr[i-g_nSquaresPerColumn] = pBackground->m_nArr[i];
 
-      for(int i=(pBackground->m_nNumSquares-g_nSquaresPerColumn); i<pBackground->m_nNumSquares; i++) {
-         int r = rand() % 255;
-	 int g = rand() % 255;
-	 int b = rand() % 255;
-         pBackground->m_nArr[i] = ((r<<16)&0xFF0000) | ((g<<8)&0x00FF00) | b;
+         for(int i=(pBackground->m_nNumSquares-g_nSquaresPerColumn); i<pBackground->m_nNumSquares; i++) {
+            int r = rand() % 255;
+            int g = rand() % 255;
+            int b = rand() % 255;
+            pBackground->m_nArr[i] = ((r<<16)&0xFF0000) | ((g<<8)&0x00FF00) | b;
+	 }
       }
    }
 }

@@ -14,9 +14,10 @@ struct Background
    int m_nX;
    int* m_nArr;
    int m_nNumSquares;
+   int m_nAllowMovement;
 };
 
-void CreateBackground(struct Background** ppBackground, struct SDL_Surface* pScreen, struct Config* pConfig);
+void CreateBackground(struct Background** ppBackground, struct SDL_Surface* pScreen, struct Config* pConfig, int nAllowMovement);
 void FreeBackground(struct Background** ppBackground);
 void DrawBackground(struct Background* pBackground);
 
