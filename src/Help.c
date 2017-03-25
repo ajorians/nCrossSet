@@ -16,7 +16,7 @@ void CreateHelp(struct Help** ppHelp, struct SDL_Surface* pScreen)
    *ppHelp = malloc(sizeof(struct Help));
    struct Help* pHelp = (*ppHelp);
 
-   pHelp->m_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 255/*R*/, 0/*G*/, 0/*B*/, 12);
+   pHelp->m_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 0x00/*R*/, 0x00/*G*/, 0x00/*B*/, 12);
 
    pHelp->m_pScreen = pScreen;
 }
@@ -81,16 +81,18 @@ void UpdateHelpDisplay(struct Help* pHelp)
    DestRect.y = 0;
    DestRect.w = SCREEN_WIDTH;
    DestRect.h = SCREEN_HEIGHT;
-   SDL_FillRect(pHelp->m_pScreen, &DestRect, SDL_MapRGB(pHelp->m_pScreen->format, 0, 255, 255));
+   SDL_FillRect(pHelp->m_pScreen, &DestRect, SDL_MapRGB(pHelp->m_pScreen->format, 0x87, 0xCE, 0xEB));
 
    DrawText(pHelp->m_pScreen, pHelp->m_pFont, 10, 10, 
-"To play use the ctrl key to toggle the \n\
+"Help:\n\
+\n\
+To play use the ctrl key to toggle the \n\
 cell's value.  Use the shift key to lock\n\
 a cell's value to prevent accidental\n\
 changes.\n\
 \n\
 You win when every row and column are\n\
-set to contain unique vaues", 255, 255, 255);
+set to contain unique values", 255, 255, 255);
 
    SDL_UpdateRect(pHelp->m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }

@@ -10,6 +10,9 @@ void CreateConfig(struct Config** ppConfig)
    for(int nLevel = 0; nLevel<(int)(sizeof(pConfig->m_nBeatLevels)/sizeof(pConfig->m_nBeatLevels[0])); nLevel++)
       pConfig->m_nBeatLevels[nLevel] = 0;
 
+   pConfig->m_nDrawBackground = 1;
+   pConfig->m_nLockHint = 0;
+
    pConfig->m_Archive = NULL;
    ArchiveCreate(&pConfig->m_Archive);
 

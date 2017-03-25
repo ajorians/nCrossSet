@@ -18,7 +18,8 @@ void CreateOptions(struct Options** ppOptions, struct Config* pConfig, struct SD
    *ppOptions = malloc(sizeof(struct Options));
    struct Options* pOptions = (*ppOptions);
 
-   pOptions->m_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 255/*R*/, 255/*G*/, 255/*B*/, 12);
+   pOptions->m_pFont = LoadFont("ARIAL.TTF", NSDL_FONT_THIN, 0x00/*R*/, 0x00/*G*/, 0x00/*B*/, 12);
+   pOptions->m_nCurrentOption = 0;
 
    pOptions->m_pConfig = pConfig;
    pOptions->m_pScreen = pScreen;
@@ -60,15 +61,24 @@ int PollOptionsEvents(struct Options* pOptions)
                   break;
 
 	       case SDLK_UP:
+		  if( pOptions->m_nCurrentOption > 0 )
+                     pOptions->m_nCurrentOption--;
 		  break;
 
 	       case SDLK_DOWN:
+		  if( pOptions->m_nCurrentOption < 1 )
+                     pOptions->m_nCurrentOption++;
 		  break;
 
                case SDLK_SPACE:
                case SDLK_RETURN:
                case SDLK_LCTRL:
-                  SetLockHint(pOptions->m_pConfig, GetLockHint(pOptions->m_pConfig) == 1 ? 0 : 1); 
+		  if( pOptions->m_nCurrentOption == 0 ) {
+                     SetLockHint(pOptions->m_pConfig, GetLockHint(pOptions->m_pConfig) == 1 ? 0 : 1);
+		  }
+		  else if( pOptions->m_nCurrentOption == 1 ) {
+                     SetDrawBackground(pOptions->m_pConfig, GetDrawBackground(pOptions->m_pConfig) == 1 ? 0 : 1);
+		  }
                   break;
 
                default:
@@ -114,7 +124,7 @@ void UpdateOptionsDisplay(struct Options* pOptions)
    DestRect.y = 0;
    DestRect.w = SCREEN_WIDTH;
    DestRect.h = SCREEN_HEIGHT;
-   SDL_FillRect(pOptions->m_pScreen, &DestRect, SDL_MapRGB(pOptions->m_pScreen->format, 0, 0, 255));
+   SDL_FillRect(pOptions->m_pScreen, &DestRect, SDL_MapRGB(pOptions->m_pScreen->format, 0x87, 0xCE, 0xEB));
    
     DrawText(pOptions->m_pScreen, pOptions->m_pFont, 10, 10,  "Options:", 255, 255, 255);
     
@@ -125,12 +135,27 @@ void UpdateOptionsDisplay(struct Options* pOptions)
        DrawText(pOptions->m_pScreen, pOptions->m_pFont, 180, 30,  "Off", 255, 255, 255);
     }
     
-    draw_rectangle(pOptions->m_pScreen, SDL_MapRGB(pOptions->m_pScreen->format, 255, 0, 0), 8, 25, 210, 22, 1);
+    if( pOptions->m_nCurrentOption == 0 )
+       draw_rectangle(pOptions->m_pScreen, SDL_MapRGB(pOptions->m_pScreen->format, 255, 0, 0), 8, 25, 210, 22, 1);
     
     DrawText(pOptions->m_pScreen, pOptions->m_pFont, 10, 50,  
 "When you lock a cell's value\n\
 numbers on cells in that row/column\n\
 are marked red.", 255, 255, 255);
+
+    DrawText(pOptions->m_pScreen, pOptions->m_pFont, 10, 110, "Animated background:", 255, 255, 255);
+    if( GetDrawBackground(pOptions->m_pConfig) == 1 ) {
+       DrawText(pOptions->m_pScreen, pOptions->m_pFont, 180, 110, "On", 255, 255, 255);
+    } else {
+       DrawText(pOptions->m_pScreen, pOptions->m_pFont, 180, 110, "Off", 255, 255, 255);
+    }
+    
+    DrawText(pOptions->m_pScreen, pOptions->m_pFont, 10, 130,
+"Whether the background moves\n\
+during the game.", 255, 255, 255);
+
+    if( pOptions->m_nCurrentOption == 1 )
+       draw_rectangle(pOptions->m_pScreen, SDL_MapRGB(pOptions->m_pScreen->format, 255, 0, 0), 8, 105, 210, 22, 1);
 
    SDL_UpdateRect(pOptions->m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }
