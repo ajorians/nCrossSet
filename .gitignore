@@ -32,5 +32,17 @@
 *.dSYM/
 *.su
 
+# Visual Studio files
+*.suo
+*.opendb
+*.db
+*.log
+*.pdb
+*.tlog
+*.lastbuildstate
+*.idb
+*.ilk
+
+
 #Nspire files
 *.tns
