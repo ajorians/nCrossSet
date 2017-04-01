@@ -3,12 +3,8 @@
 #include <libndls.h>
 #endif
 #include "Game.h"
+#include "Replacements.h"
 #include "YouWinGraphic.h"
-
-#ifndef _TINSPIRE
-#define SCREEN_WIDTH	(320)
-#define SCREEN_HEIGHT	(240)
-#endif
 
 void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, struct Config* pConfig, struct SDL_Surface* pScreen)
 {
@@ -18,9 +14,11 @@ void CreateGame(struct Game** ppGame, const char* pstrLevelData, int nLevelNum, 
    pGame->m_nLevelNum = nLevelNum;
    pGame->m_pConfig = pConfig;
    pGame->m_bWon = IsCrossGameOver(pGame->m_Cross);
-   
+
+#ifdef _TINSPIRE
    pGame->m_pYouWinGraphic = nSDL_LoadImage(image_YouWin);
    SDL_SetColorKey(pGame->m_pYouWinGraphic, SDL_SRCCOLORKEY, SDL_MapRGB(pGame->m_pYouWinGraphic->format, 255, 255, 255));
+#endif
 
    pGame->m_pScreen = pScreen;
    CreateBackground(&(pGame->m_pBackground), pGame->m_pScreen, pGame->m_pConfig, 1);
@@ -58,7 +56,9 @@ void FreeGame(struct Game** ppGame)
    }
    free(pGame->m_apPieces);
 
+#ifdef _TINSPIRE
    SDL_FreeSurface(pGame->m_pYouWinGraphic);
+#endif
    FreeSelector(&pGame->m_pSelector);
    FreeBackground(&pGame->m_pBackground);
    FreeMetrics(&pGame->m_pMetrics);
@@ -104,7 +104,9 @@ void DrawBoard(struct Game* pGame)
 void UpdateGameWon(struct Game* pGame)
 {
    if( pGame->m_bWon && pGame->m_nLevelNum > 0 && pGame->m_nLevelNum <= 56 ) {
+#ifdef _TINSPIRE
       SetBeatLevel(pGame->m_pConfig, pGame->m_nLevelNum-1/*To 0-base*/, 1);
+#endif
    }
 }
 

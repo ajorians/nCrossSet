@@ -51,6 +51,18 @@
     <ClCompile Include="Replacements.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Help.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuItem.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Options.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StarDrawer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Background.h">
@@ -87,6 +99,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Replacements.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Help.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Options.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StarDrawer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StarGraphic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="YouWinGraphic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

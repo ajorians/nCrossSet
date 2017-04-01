@@ -89,7 +89,10 @@ void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen)
       int nR = 127, nG = 127, nB = 127;
 #ifdef USE_DIFFERENT_FONT
       if( CROSSLIB_HAS_VALUE == IsCrossNumberLockedOnRowColumn( pPiece->m_Cross, pPiece->m_nX, pPiece->m_nY, n )
-          && GetLockHint(pPiece->m_pConfig) == 1 ) {
+#ifdef _TINSPIRE
+          && GetLockHint(pPiece->m_pConfig) == 1 
+#endif
+         ) {
          pFont = g_pFontUsed;
          nR = 255, nG = 0, nB = 0;
       }

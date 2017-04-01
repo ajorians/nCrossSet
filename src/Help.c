@@ -6,11 +6,6 @@
 #include "Help.h"
 #include "Replacements.h"
 
-#ifndef _TINSPIRE
-#define SCREEN_WIDTH	(320)
-#define SCREEN_HEIGHT	(240)
-#endif
-
 void CreateHelp(struct Help** ppHelp, struct SDL_Surface* pScreen)
 {
    *ppHelp = malloc(sizeof(struct Help));

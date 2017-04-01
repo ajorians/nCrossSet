@@ -139,13 +139,17 @@
     <ClCompile Include="Config.c" />
     <ClCompile Include="Font.c" />
     <ClCompile Include="Game.c" />
+    <ClCompile Include="Help.c" />
     <ClCompile Include="Levels.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="MainMenu.c" />
+    <ClCompile Include="MenuItem.c" />
     <ClCompile Include="Metrics.c" />
+    <ClCompile Include="Options.c" />
     <ClCompile Include="Piece.c" />
     <ClCompile Include="Replacements.c" />
     <ClCompile Include="Selector.c" />
+    <ClCompile Include="StarDrawer.c" />
     <ClCompile Include="Startup.c" />
   </ItemGroup>
   <ItemGroup>
@@ -154,13 +158,19 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameBackgroundWide.h" />
+    <ClInclude Include="Help.h" />
     <ClInclude Include="Levels.h" />
     <ClInclude Include="MainMenu.h" />
+    <ClInclude Include="MenuItem.h" />
     <ClInclude Include="Metrics.h" />
+    <ClInclude Include="Options.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="Replacements.h" />
     <ClInclude Include="Selector.h" />
+    <ClInclude Include="StarDrawer.h" />
+    <ClInclude Include="StarGraphic.h" />
     <ClInclude Include="Startup.h" />
+    <ClInclude Include="YouWinGraphic.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

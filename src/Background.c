@@ -1,4 +1,5 @@
 #include "Background.h"
+#include "Replacements.h"
 
 const int g_nSquaresAcross = 10;
 const int g_nSquaresPerColumn = 10;
@@ -54,7 +55,11 @@ void DrawBackground(struct Background* pBackground) {
       SDL_FillRect(pBackground->m_pScreen, &rectDst, SDL_MapRGB(pBackground->m_pScreen->format, r, g, b));
    }
 
-   if( pBackground->m_nAllowMovement == 1 && GetDrawBackground(pBackground->m_pConfig) == 1 ) {
+   if( pBackground->m_nAllowMovement == 1 
+#ifdef _TINSPIRE
+      && GetDrawBackground(pBackground->m_pConfig) == 1
+#endif
+      ) {
       pBackground->m_nX = pBackground->m_nX-1;
       if( pBackground->m_nX <= (-nSquaresWide) ) {
          pBackground->m_nX = 0;

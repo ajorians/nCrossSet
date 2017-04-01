@@ -5,14 +5,8 @@
 #endif
 #include "MainMenu.h"
 #include "Replacements.h"
-//#include "StarDrawer.h"
 #include "Levels.h"
 #include "MenuGraphic.h"
-
-#ifndef _TINSPIRE
-#define SCREEN_WIDTH	(320)
-#define SCREEN_HEIGHT	(240)
-#endif
 
 void UpdateSelectedItems(struct MainMenu* pMenu);
 void FreeLevelMenuItems(struct MainMenu* pMenu);
@@ -243,7 +237,12 @@ void UpdateDisplay(struct MainMenu* pMenu)
    if( pMenu->m_eSelection != Categories ) {
       for(unsigned int i=0; i<sizeof(pMenu->m_ChoiceLevels)/sizeof(pMenu->m_ChoiceLevels[0]); i++) {
          int nLevel = (pMenu->m_nCurrentCategory*8)+i;
-	 int nBeatLevel = GetBeatLevel(pMenu->m_pConfig, nLevel);
+         int nBeatLevel =
+#ifdef _TINSPIRE
+            GetBeatLevel(pMenu->m_pConfig, nLevel);
+#else
+            0;
+#endif
          MenuItemDraw(&pMenu->m_ChoiceLevels[i], pMenu->m_pScreen, nBeatLevel == 1 ? pMenu->m_pStarDrawer : NULL );
       }
    }
@@ -330,8 +329,10 @@ void CreateLevelMenuItems(struct MainMenu* pMenu)
       int nLevelsBeaten = 0;
       for(int j=0; j<(int)(sizeof(pMenu->m_ChoiceLevels)/sizeof(pMenu->m_ChoiceLevels[0])); j++) {
          int nLevel = (i*8) + j;
+#ifdef _TINSPIRE
          if( GetBeatLevel( pMenu->m_pConfig, nLevel) == 1 )
             nLevelsBeaten++;
+#endif
       }
    
       char bufferLevelsBeaten[8];

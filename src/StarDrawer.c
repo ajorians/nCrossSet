@@ -5,17 +5,21 @@ void CreateStarDrawer(struct StarDrawer** ppDrawer)
 {
    *ppDrawer = malloc(sizeof(struct StarDrawer));
    struct StarDrawer* pDrawer = (*ppDrawer);
-   
+
+#ifdef _TINSPIRE
    pDrawer->m_pStar = nSDL_LoadImage(image_Star);
    SDL_SetColorKey(pDrawer->m_pStar, SDL_SRCCOLORKEY, SDL_MapRGB(pDrawer->m_pStar->format, 0, 0, 0));
+#endif
 }
 
 void FreeStarDrawer(struct StarDrawer** ppDrawer)
 {
    struct StarDrawer* pDrawer = (*ppDrawer);
-   
+
+#ifdef _TINSPIRE
    SDL_FreeSurface(pDrawer->m_pStar);
-   
+#endif
+
    free(*ppDrawer);
    *ppDrawer = NULL;
 }

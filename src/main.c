@@ -13,11 +13,7 @@
 #ifndef _TINSPIRE
 #include <SDL/SDL_ttf.h>
 #endif
-
-#ifdef _WIN32
-#define SCREEN_WIDTH	(320)
-#define SCREEN_HEIGHT	(240)
-#endif
+#include "Replacements.h"
 
 #define SCREEN_BIT_DEPTH        (16)
 #ifdef _TINSPIRE

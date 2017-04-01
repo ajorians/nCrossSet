@@ -1,6 +1,7 @@
 #include "MenuItem.h"
 
 #include "Font.h"
+#include "Replacements.h"
 
 #define PIECE_BORDER_SIZE	(4)
 
@@ -11,8 +12,8 @@ static Font* g_pFontMenuItem = NULL;
 void CreateMenuItem(struct MenuItem* pMenuItem, int x, char* pstrText, char* pstrSubText, enum MenuItemType eMenuType)
 {
    pMenuItem->m_nX = x;
-   strcpy(pMenuItem->m_Text, pstrText);
-   strcpy(pMenuItem->m_SubText, pstrSubText);
+   StringCopy(pMenuItem->m_Text, sizeof(pMenuItem->m_Text)/sizeof(pMenuItem->m_Text[0]), pstrText);
+   StringCopy(pMenuItem->m_SubText, sizeof(pMenuItem->m_SubText)/sizeof(pMenuItem->m_SubText[0]), pstrSubText);
    pMenuItem->m_eMenuType = eMenuType;
    pMenuItem->m_nSelected = 0;
 
