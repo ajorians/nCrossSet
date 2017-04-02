@@ -7,7 +7,7 @@
 #include <os.h>
 
 #define NDLESS_CONFIG_FILE "/documents/ndless/ndless.cfg.tns"
-#define CONFIG_LINE "ext.crs=nCrossSet-gc.prg"
+#define CONFIG_LINE "ext.crs=nCrossSet-sdl.prg"
 
 int config_file_already_written() {
     FILE *fp = fopen(NDLESS_CONFIG_FILE,"rb");

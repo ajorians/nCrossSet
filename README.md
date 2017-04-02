@@ -9,7 +9,7 @@ It is played where you make the active number in each row and column unique from
 How to put on calculator:
 Start up TI-NSpire Student Software or whatever you use to put it on the calculator.  Then just drag-n-srop the nCrossSet-sdl.prg.tns file into the application to transfer it to your calculator.  You have to have ndless 3.1 or higher on your calculator in order to run it!
 
-Also included is an external level.  You can add that to your calculator as well.  Once you start the main game it will register the .cross extension; then you can run the level to play it.
+Also included is an external level.  You can add that to your calculator as well.  Once you start the main game it will register the .crs extension; then you can run the level to play it.
 
 How to play:
 Every cell has an active number.  That number is in the white font.  That number must be different than the active number for the other cells in that row and column.  You can switch the active number with a different active number that the cell contains.
