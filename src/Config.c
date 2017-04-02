@@ -22,7 +22,7 @@ void CreateConfig(struct Config** ppConfig)
    for(int i=0; i<nSettings; i++) {
       strcpy(strName, GetName(pConfig->m_Archive, "Settings", i));
 
-      char buffer[8];
+      char buffer[10];
 
       for(int nLevel = 0; nLevel<(int)(sizeof(pConfig->m_nBeatLevels)/sizeof(pConfig->m_nBeatLevels[0])); nLevel++) {
          sprintf(buffer, "Level%d", nLevel);
@@ -33,12 +33,12 @@ void CreateConfig(struct Config** ppConfig)
          }
       }
 
-      sprintf(buffer, "DrawBkg");
+      strcpy(buffer, "DrawBkg");
       if( strcmp(strName, buffer) == 0 ) {
          pConfig->m_nDrawBackground = atoi( GetValue(pConfig->m_Archive, "Settings", i) );
       }
 
-      sprintf(buffer, "LockHint");
+      strcpy(buffer, "LockHint");
       if( strcmp(strName, buffer) == 0 ) {
          pConfig->m_nLockHint = atoi( GetValue(pConfig->m_Archive, "Settings", i) );
       }
@@ -58,7 +58,7 @@ void FreeConfig(struct Config** ppConfig)
    }
 
    sprintf(buffer, "%d", pConfig->m_nDrawBackground);
-   sprintf(bufferName, "DrawBkg", pConfig->m_nDrawBackground);
+   strcpy(bufferName, "DrawBkg");
    UpdateArchiveEntry(pConfig->m_Archive, "Settings", bufferName, buffer, NULL);
 
    sprintf(buffer, "%d", pConfig->m_nLockHint);
