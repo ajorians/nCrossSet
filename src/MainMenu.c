@@ -87,6 +87,7 @@ int PollEvents(struct MainMenu* pMenu)
                   break;
 
                case SDLK_LEFT:
+	       case SDLK_4:
                   if( pMenu->m_eSelection == Levels ) {
                      if( pMenu->m_nCurrentLevel > 0 ) {
                         pMenu->m_nCurrentLevel--;
@@ -108,6 +109,7 @@ int PollEvents(struct MainMenu* pMenu)
                   break;
 
                case SDLK_RIGHT:
+               case SDLK_6:
 		  if( pMenu->m_eSelection == Levels ) {
                      if( pMenu->m_nCurrentLevel < 7 ) {
                         pMenu->m_nCurrentLevel++;
@@ -129,6 +131,7 @@ int PollEvents(struct MainMenu* pMenu)
                   break;
 
 	       case SDLK_UP:
+               case SDLK_8:
 		  if( pMenu->m_eSelection == Levels ) {
                      if( pMenu->m_nCurrentLevel < 4 ) {
                         pMenu->m_eSelection = Categories;
@@ -151,6 +154,7 @@ int PollEvents(struct MainMenu* pMenu)
 		  break;
 
 	       case SDLK_DOWN:
+               case SDLK_2:
 		  if( pMenu->m_eSelection == Levels ) {
                      if( pMenu->m_nCurrentLevel < 4 ) {
                         pMenu->m_nCurrentLevel += 4;

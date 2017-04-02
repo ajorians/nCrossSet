@@ -55,11 +55,13 @@ int PollOptionsEvents(struct Options* pOptions)
                   break;
 
                case SDLK_UP:
+               case SDLK_8:
                   if (pOptions->m_nCurrentOption > 0)
                      pOptions->m_nCurrentOption--;
                   break;
 
                case SDLK_DOWN:
+               case SDLK_2:
                   if (pOptions->m_nCurrentOption < 1)
                      pOptions->m_nCurrentOption++;
                   break;

@@ -122,24 +122,28 @@ int GamePollEvents(struct Game* pGame)
                   break;
 
                case SDLK_UP:
+               case SDLK_8:
 		  if( pGame->m_bWon != 1 ) {
                      Move(pGame->m_pSelector, Up);
 		  }
                   break;
 
 	       case SDLK_DOWN:
+               case SDLK_2:
 		  if( pGame->m_bWon != 1 ) {
                      Move(pGame->m_pSelector, Down);
 		  }
                   break;
 
                case SDLK_LEFT:
+               case SDLK_4:
 		  if( pGame->m_bWon != 1 ) {
                      Move(pGame->m_pSelector, Left);
 		  }
                   break;
 
                case SDLK_RIGHT:
+               case SDLK_6:
 		  if( pGame->m_bWon != 1 ) {
                      Move(pGame->m_pSelector, Right);
 		  }
