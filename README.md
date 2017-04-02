@@ -20,6 +20,8 @@ Keep playing until you beat the level.
 
 If you do find yourself stuck and unsure how to proceed I added such that the 'a' key will use an algorithm to find a value for you.  This is meant from a starting position but does work mid-game.  But it requires you not to lock a cell unless it is accurate.
 
+In the options there is an option to turn on lock hints that uses the locked cells to make it easier to spot cells which need to change the active value.
+
 Source:
 I included my source.  I programmed with C and used nSDL as well as the ndless Software Development Kit.
 
