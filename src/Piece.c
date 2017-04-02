@@ -75,8 +75,10 @@ void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen)
    static char buffer[2];
    buffer[1] = '\0';
 
+   int nOriginalLeft = GetPieceTextLeft(pPiece->m_pMetrics, pPiece->m_nX, pPiece->m_nY);
+
    int top = GetPieceTextTop(pPiece->m_pMetrics, pPiece->m_nX, pPiece->m_nY);
-   int left = GetPieceTextLeft(pPiece->m_pMetrics, pPiece->m_nX, pPiece->m_nY);
+   int left = nOriginalLeft;
 
    int nNumbers = GetCrossCellValueCount(pPiece->m_Cross, pPiece->m_nX, pPiece->m_nY);
 
@@ -111,6 +113,11 @@ void PieceDraw(struct Piece* pPiece, struct SDL_Surface* pScreen)
 #endif
 
       left += nCharWidth;
+
+      if( left >= (rect.x+rect.w) ) {
+         left = nOriginalLeft;
+	 top += 8;
+      }
    }
 }
 
