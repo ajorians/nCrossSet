@@ -42,7 +42,11 @@
 *.lastbuildstate
 *.idb
 *.ilk
-
+*.db-shm
+*.db-wal
+*.ipch
+*.vcxproj.user
+*.vcxproj.FileListAbsolute.txt
 
 #Nspire files
 *.tns
