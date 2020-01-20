@@ -2,6 +2,8 @@
 #include <os.h>
 #include <libndls.h>
 #endif
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <SDL/SDL.h>
 #include "Startup.h"
 #include "MainMenu.h"
@@ -23,10 +25,16 @@
 #endif
 
 #ifdef _WIN32
-int WinMain(int argc, char *argv[])
-#else
-int main(int argc, char *argv[])
+#include <Windows.h>
+int APIENTRY WinMain( HINSTANCE hInstance,
+                      HINSTANCE hPrevInstance,
+                      LPSTR lpCmdLine, int nCmdShow )
+{
+   return main( __argc, __argv );
+}
 #endif
+
+int main( int argc, char* argv[] )
 {
 #ifdef _TINSPIRE
    ArchiveSetCurrentDirectory( argv[0] );
